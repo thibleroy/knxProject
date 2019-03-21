@@ -1,36 +1,32 @@
-<p>
-  home works!
-</p>
 <ons-page>
   <ons-toolbar>
     <div class="left">
-      <ons-toolbar-button>
-        <ons-icon icon="md-menu"></ons-icon>
+      <ons-toolbar-button (click)="prev()">
+        <ons-icon icon="md-chevron-left"></ons-icon>
       </ons-toolbar-button>
     </div>
-    <div class="center">Buttons</div>
+    <div class="center">Carousel</div>
     <div class="right">
-      <ons-toolbar-button>Button</ons-toolbar-button>
+      <ons-toolbar-button (click)="next()">
+        <ons-icon icon="md-chevron-right"></ons-icon>
+      </ons-toolbar-button>
     </div>
   </ons-toolbar>
-
-  <section style="padding: 8px">
-    <ons-button modifier="quiet">quiet</ons-button>
-    <ons-button>Default</ons-button>
-    <p></p>
-    <ons-button modifier="large--quiet">large--quiet / material--flat</ons-button>
-    <p></p>
-    <ons-button modifier="large">large</ons-button>
-  </section>
-
-  <section style="padding: 8px">
-    <p></p><br><br>
-    <ons-button modifier="quiet" disabled="true">quiet</ons-button>
-    <ons-button disabled="true">Default</ons-button>
-    <p></p>
-    <ons-button modifier="large--quiet" disabled="true">large--quiet / material--flat</ons-button>
-    <p></p>
-    <ons-button modifier="large" disabled="true">large</ons-button>
-  </section>
-
+  <div class="content">
+    <ons-carousel #carousel fullscreen swipeable auto-scroll overscrollable id="carousel">
+      <ons-carousel-item style="background-color: #085078;">
+        <div style="text-align: center; font-size: 30px; margin-top: 20px; color: #fff;">
+          BLUE
+        </div>
+      </ons-carousel-item>
+      <ons-carousel-item style="background-color: #373B44;">
+        <div style="text-align: center; font-size: 30px; margin-top: 20px; color: #fff;">
+          DARK
+        </div>
+      </ons-carousel-item> <ons-carousel-item style="background-color: #D38312;"> <div style="text-align: center; font-size: 30px; margin-top: 20px; color: #fff;">
+          ORANGE
+        </div>
+      </ons-carousel-item>
+    </ons-carousel>
+  </div>
 </ons-page>

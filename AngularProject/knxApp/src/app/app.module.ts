@@ -6,6 +6,7 @@ import { OnsenModule } from 'ngx-onsenui';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { AppRoutingModule } from './app-routing.module';
 import { HomeComponent } from './home/home.component';
+import { MainComponent } from './main/main.component';
 
 @NgModule({
   schemas: [
@@ -13,7 +14,8 @@ import { HomeComponent } from './home/home.component';
 ],
   declarations: [
     AppComponent,
-    HomeComponent
+    HomeComponent,
+    MainComponent
   ],
   imports: [
     BrowserModule,
