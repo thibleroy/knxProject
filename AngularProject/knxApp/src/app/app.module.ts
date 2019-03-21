@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-
+import { HttpClientModule } from '@angular/common/http';
 import { AppComponent } from './app.component';
 import { OnsenModule } from 'ngx-onsenui';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
@@ -15,10 +15,12 @@ import { MainComponent } from './main/main.component';
   declarations: [
     AppComponent,
     HomeComponent,
-    MainComponent
+    MainComponent,
+    
   ],
   imports: [
     BrowserModule,
+    HttpClientModule,
     OnsenModule,
     AppRoutingModule
   ],
