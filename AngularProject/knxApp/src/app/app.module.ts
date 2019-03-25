@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-
+import {NgxMqttClientModule} from 'ngx-mqtt-client';
 import { AppComponent } from './app.component';
 import { OnsenModule } from 'ngx-onsenui';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
@@ -20,7 +20,12 @@ import { MainComponent } from './main/main.component';
   imports: [
     BrowserModule,
     OnsenModule,
-    AppRoutingModule
+    AppRoutingModule,
+    NgxMqttClientModule.withOptions({
+      host: '3.83.149.37',
+      protocol: 'ws',
+      port: 9001
+  })
   ],
   providers: [],
   bootstrap: [AppComponent]
