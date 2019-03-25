@@ -1,4 +1,32 @@
 <h1>Lets go</h1>
-<router-outlet></router-outlet>
-<app-messages></app-messages>
 
+<ons-page>
+    <ons-toolbar>
+      <div class="center">Ici on va controller la maquette en FAIT</div>
+    </ons-toolbar>
+    <div class="background"></div>
+    <div class="content">
+      <div style="text-align: center; margin: 10px">
+        <ons-button (click)="subscribe('baBAR')">SUBSCRIBE TO FOOBAR TOPIC</ons-button> <br>
+        <ons-button (click)="sendMsg('baBAR','ON')">Turn ON en FAIT</ons-button> <br>
+        <ons-button (click)="sendMsg('baBAR','chenillard')">Démarre le chenillard richard</ons-button> <br>
+        <ons-button (click)="unsubscribe('baBAR')">UNSUBSCRIBE FROM FOOBAR TOPIC</ons-button> <br>
+        <ons-range modifier="material" [(value)]="value" (change)="sendMsg('baBAR',[(value)])"></ons-range><br>
+        {{value}}
+        <div fxLayout>
+            <div fxFlex="20">
+                <h1>Messages:</h1>
+                <p *ngFor="let message of messages">
+                    {{message | json}}
+                </p>
+            </div>
+            <div>
+                <h1>Status info:</h1>
+                <p *ngFor="let statusMessage of status">
+                    {{statusMessage}}
+                </p>
+            </div>
+        </div>
+      </div>
+    </div>
+</ons-page>
