@@ -1,0 +1,24 @@
+{
+  "name": "knxjs",
+  "version": "1.0.0",
+  "description": "",
+  "main": "testknx.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/thibleroy/knxProject.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/thibleroy/knxProject/issues"
+  },
+  "homepage": "https://github.com/thibleroy/knxProject#readme",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "express": "^4.16.4",
+    "knx": "^2.3.2"
+  }
+}
