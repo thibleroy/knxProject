@@ -1,60 +1,34 @@
-var knx = require ('knx');
-var chen
-var inverse
-var time
-var connection
-var isConnected = false
-const express = require("express");
-const bodyParser = require("body-parser");
-    // partie server HTTP
-    const app = express();
-    app.use(function(req, res, next) { 
-      res.header('Access-Control-Allow-Origin', "*"); 
-      res.header('Access-Control-Allow-Methods','GET,PUT,POST,DELETE'); 
-      res.header('Access-Control-Allow-Headers', 'Content-Type'); 
-      next(); 
-      });
-    app.use(bodyParser.json());//pour comprendre les json
-    app.use(bodyParser.urlencoded({ extended: true }));
-    app.listen(3000, function () {
-     console.log("App listening on port 3000 ");
-    });
-
-app.get("/disconnect", function (req, res) {
-  res.send("disConnecting");
-  connection.Disconnect()
-  isConnected = false
- });
- app.get("/fast", function (req, res) {
-   eventAction(3)
-  res.send("ATTENTION MAN CA VA SI VIIIIITE en fait");
- });
- app.get("/slow", function (req, res) {
-  eventAction(4)
- res.send("ATTENTION MAN CA VA SI pas vite en fait");
-});
- app.get("/connect", function (req, res) {
-  res.send("Connecting");
-  letsConnectMan()
- });
-
-app.get("/", function (req, res) {
-  res.send("Hey, I am responding to your request!");
- });
-
-
-//get est une requete du serveur vers le client
-app.get("/on", function (req, res) {// req est l'info envoyée du client au serveur, res est la réponse de celui-ci
-//if (typeof(req.body) != "object" || !(req.body.imei) || !(req.body.contact)){
-eventAction(1)
- res.send('salut');
+const knx = require ('knx');
+const mqtt=require('mqtt')
+let chen
+let inverse
+let time
+const connection
+let isConnected = false
+const client = mqtt.connect('tcp://3.83.149.37:1883')
+client.on("connect", () => {
+  client.subscribe('knx/action')
 })
-app.get("/reverse", function (req, res) {// req est l'info envoyée du client au serveur, res est la réponse de celui-ci
-//if (typeof(req.body) != "object" || !(req.body.imei) || !(req.body.contact)){
-eventAction(2)
- res.send('inverse');
-})
+client.on('message',(topic,message)=>{
+let msg=JSON.parse(message)
+switch(msg.action){
+  case 'on':
+  let tab=msg.value.split()
+    chenillard(msg.value[0],msg.value[1],msg.value[2],msg.value[3])
+  break
+  case 'off':
+chen=false
+  break
+  case 'speed':
+time = msg.value
 
+  break
+  case 'reverse':
+  inverse=!inverse
+  break
+  default:break
+}
+})
     function eventAction(numEvent){
       switch (numEvent){
         case 1 : 

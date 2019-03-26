@@ -19,6 +19,7 @@
   "dependencies": {
     "body-parser": "^1.18.3",
     "express": "^4.16.4",
-    "knx": "^2.3.2"
+    "knx": "^2.3.2",
+    "mqtt": "^2.18.8"
   }
 }
