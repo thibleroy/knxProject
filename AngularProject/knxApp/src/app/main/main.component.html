@@ -5,10 +5,24 @@
   <div class="background"></div>
   <div class="content">
     <div style="text-align: center; margin: 10px">
-      <ons-button (click)="clickTurnOn()">Turn ON en FAIT</ons-button> <br>
-      <ons-range [(value)]="value"></ons-range><br>
-      <ons-range modifier="material" [(value)]="value" onchange="alert('pas si vite en fait')"></ons-range><br>
+      <ons-button (click)="sendMsg('knx/action','on', [1,2,3,4])">Turn ON en FAIT</ons-button> <br>
+      <ons-button (click)="sendMsg('knx/action','chenillard')">Démarre le chenillard richard</ons-button> <br>
+      <ons-range modifier="material" [(value)]="value" (change)="sendMsg('knx/action',[(value)])"></ons-range><br>
       {{value}}
+      <div fxLayout>
+          <div fxFlex="20">
+              <h1>Messages:</h1>
+              <p *ngFor="let message of messages">
+                  {{message | json}}
+              </p>
+          </div>
+          <div>
+              <h1>Status info:</h1>
+              <p *ngFor="let statusMessage of status">
+                  {{statusMessage}}
+              </p>
+          </div>
+      </div>
     </div>
   </div>
 </ons-page>

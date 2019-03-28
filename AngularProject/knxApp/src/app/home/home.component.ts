@@ -31,9 +31,6 @@ export class HomeComponent implements OnInit {
 @NgModule({
   imports: [OnsenModule],
   declarations: [HomeComponent],
-  bootstrap: [HomeComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 class HomeModule { }
-
-platformBrowserDynamic().bootstrapModule(HomeModule);
