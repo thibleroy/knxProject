@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { AppComponent } from '../app.component';
 
 @Component({
   selector: 'app-toolbar',
@@ -7,7 +8,7 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ToolbarComponent implements OnInit {
 
-  constructor() { }
+  constructor ( private App : AppComponent){}
 
   checked : boolean = false;
 
@@ -16,7 +17,7 @@ export class ToolbarComponent implements OnInit {
 
   connectToDevice(){
     this.checked = !this.checked
-    if(this.checked) console.log("test")
-    else {console.log("deco")}
+    if(this.checked) this.App.sendMsg('knx/action', 'connect', null)
+    else {this.App.sendMsg('knx/action', 'disconnect',null)}
   }
 }
