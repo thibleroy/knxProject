@@ -1,28 +1,39 @@
 <ons-page>
-  <ons-toolbar>
-    <div class="center">Ici on va controller la maquette en FAIT</div>
-  </ons-toolbar>
+  <ons-toolbar></ons-toolbar>
   <div class="background"></div>
   <div class="content">
+    <ng-container style="align-content:center">
+      <ons-row>
+    <ons-card>
+aaa
+    </ons-card>
+    <ons-card>
+aa
+    </ons-card>
+  </ons-row>
+  </ng-container>
+      <ons-list>
+          <ons-list-header>Vérifiez que le device est bien connecté (en haut à droite)</ons-list-header>
+          <ons-list-item><ons-button (click)="sendMsg('knx/action','on', [1,2,3,4])">Turn ON en FAIT</ons-button></ons-list-item>
+          <ons-list-item>Test</ons-list-item>
+          <ons-list-item>Boi</ons-list-item>
     <div style="text-align: center; margin: 10px">
-      <ons-button (click)="sendMsg('knx/action','on', [1,2,3,4])">Turn ON en FAIT</ons-button> <br>
+       <br>
+       <ons-input placeholder="Type here" [(value)]="target"></ons-input>
       <ons-button (click)="sendMsg('knx/action','chenillard')">Démarre le chenillard richard</ons-button> <br>
-      <ons-range modifier="material" [(value)]="value" (change)="sendMsg('knx/action',[(value)])"></ons-range><br>
-      {{value}}
-      <div fxLayout>
-          <div fxFlex="20">
-              <h1>Messages:</h1>
-              <p *ngFor="let message of messages">
-                  {{message | json}}
-              </p>
-          </div>
-          <div>
-              <h1>Status info:</h1>
-              <p *ngFor="let statusMessage of status">
-                  {{statusMessage}}
-              </p>
-          </div>
-      </div>
+      <ons-range modifier="material" [(value)]="value" (change)="sendMsg('knx/action',[(value)])"></ons-range><br>{{value}}<br>
+      <img src="assets/img/reverse.png" (click)="sendMsg('knx/action','reverse', null)">
     </div>
-  </div>
+    </ons-list>
+  
+  <ons-card>
+    Maquette 1
+  </ons-card>
+  <ons-card>
+      Maquette 2
+    </ons-card>
+</div>
+  <ons-fab ripple position="bottom right">
+      <ons-icon icon="md-plus"></ons-icon>
+    </ons-fab>
 </ons-page>

@@ -7,6 +7,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { HomeComponent } from './home/home.component';
 import { MainComponent } from './main/main.component';
 import { MqttService, NgxMqttClientModule } from 'ngx-mqtt-client';
+import { ToolbarComponent } from './toolbar/toolbar.component';
 
 @NgModule({
   schemas: [
@@ -15,7 +16,8 @@ import { MqttService, NgxMqttClientModule } from 'ngx-mqtt-client';
   declarations: [
     AppComponent,
     HomeComponent,
-    MainComponent
+    MainComponent,
+    ToolbarComponent
   ],
   imports: [
     BrowserModule,
