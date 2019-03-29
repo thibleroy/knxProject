@@ -19,9 +19,11 @@ export class MainComponent implements OnInit,OnDestroy {
     }
 
     constructor ( private App : AppComponent){}
-    messages: Array<Foo> = [];
 
-  status: Array<string> = [];
+    lamp1 : string ='1';
+    lamp2 : string ='2';
+    lamp3 : string ='3';
+    lamp4 : string ='4';
   value: string = '50';
   clickTurnOn() {
     ons.notification.alert('Clicked!');
@@ -31,6 +33,8 @@ export class MainComponent implements OnInit,OnDestroy {
     this.App.subscribe('knx/state')
   }
   sendMsg(topic,action,value){
+    if (value == 'Chenillard') {value=["1","2","3","4"]}
+    if (value == 'orderChenillard') {value=[this.lamp1,this.lamp2,this.lamp3,this.lamp4]}
       this.App.sendMsg(topic,action,value)
   }
 
