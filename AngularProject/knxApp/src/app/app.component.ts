@@ -1,10 +1,15 @@
 import {Component, Output, EventEmitter, OnDestroy} from '@angular/core';
 import { MqttService, ConnectionStatus, SubscriptionGrant } from 'ngx-mqtt-client';
 import { IClientOptions } from 'mqtt';
+import { stringify } from '@angular/compiler/src/util';
 
 export interface Foo {
     bar: string;
 }
+interface MqttMessage {
+    action:    string;
+    value:     string;
+  }
 
 @Component({
     selector: 'app-root',
@@ -48,13 +53,36 @@ export class AppComponent implements OnDestroy{
    * After that the subscription will only emit new value if someone publishes into the fooBar topic.
    * */
   subscribe(topic): void {
-      this._mqttService.subscribeTo<Foo>(topic)
+      this._mqttService.subscribeTo(topic)
           .subscribe({
-              next: (msg: SubscriptionGrant | Foo) => {
+              next: (msg: SubscriptionGrant | MqttMessage) => {
                   if (msg instanceof SubscriptionGrant) {
                       this.status.push('Subscribed to : '+topic+' !');
                   } else {
-                      this.messages.push(msg);
+                      if (topic == "knx/state"){
+                        switch (msg.action){ // {"action" : "l1", "value" : "0"}
+                            case "l1" : 
+                            if (msg.value=="1"){
+                                console.log("l1 allumée")
+                                }else {console.log("l1 éteinte")}
+                            break
+                            case "l2" : 
+                            if (msg.value=="1"){
+                                console.log("l2 allumée")
+                                }else {console.log("l2 éteinte")}
+                            break
+                            case "l3" : 
+                            if (msg.value=="1"){
+                                console.log("l3 allumée")
+                                }else {console.log("l3 éteinte")}
+                            break
+                            case "l4" : 
+                            if (msg.value=="1"){
+                                console.log("l4 allumée")
+                                }else {console.log("l4 éteinte")}
+                            break
+                        }
+                      }
                   }
               },
               error: (error: Error) => {

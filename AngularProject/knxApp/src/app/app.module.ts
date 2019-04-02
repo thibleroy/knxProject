@@ -26,7 +26,7 @@ import { LoginComponent } from './login/login.component';
     OnsenModule,
     AppRoutingModule,
     NgxMqttClientModule.withOptions({
-      host: '192.168.0.108',
+      host: '3.83.149.37',
       protocol: 'ws',
       port: 9001,
       clientId: 'Duncan'
