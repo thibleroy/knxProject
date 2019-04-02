@@ -1,7 +1,7 @@
 <ons-page>
   <ons-toolbar></ons-toolbar>
   <div class="background"></div>
-  <div class="content" *ngIf="isChecked">
+  <div class="content">
       <ons-list style="min-height : 100%">
           <ons-list-header>Vérifiez que le device est bien connecté (en haut à droite)</ons-list-header>
           <ons-list-item><ons-button (click)="sendMsg('knx/action','on', 'Chenillard')">Turn ON en FAIT</ons-button></ons-list-item>

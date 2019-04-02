@@ -1,4 +1,4 @@
-import {Component, Output, EventEmitter} from '@angular/core';
+import {Component, Output, EventEmitter, OnDestroy} from '@angular/core';
 import { MqttService, ConnectionStatus, SubscriptionGrant } from 'ngx-mqtt-client';
 import { IClientOptions } from 'mqtt';
 
@@ -11,7 +11,7 @@ export interface Foo {
     templateUrl: './app.component.html',
     styleUrls: ['./app.component.css']
 })
-export class AppComponent {
+export class AppComponent implements OnDestroy{
     messages: Array<Foo> = [];
 
   status: Array<string> = [];

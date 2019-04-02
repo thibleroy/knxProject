@@ -6,6 +6,7 @@ import { MainComponent } from './main/main.component';
 import { AppComponent } from './app.component';
 
 const routes: Routes = [
+  { path : 'test', component: AppComponent},
   { path: '', component: LoginComponent },
   { path: 'connect', component: HomeComponent },
   { path: 'main', component: MainComponent }

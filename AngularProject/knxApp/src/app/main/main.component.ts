@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, Input, SimpleChanges, SimpleChange } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input, SimpleChanges, SimpleChange, OnChanges } from '@angular/core';
 import * as ons from 'onsenui';
 import { AppComponent } from "../app.component";
 
@@ -12,14 +12,13 @@ export interface Foo {
   styleUrls: ['./main.component.css']
 })
 
-export class MainComponent implements OnInit,OnDestroy {
+export class MainComponent implements OnInit,OnDestroy, OnChanges {
 
   @Input() data;
 
 
   
     ngOnDestroy(): void {
-        throw new Error("Method not implemented.");
     }
 
     constructor ( private App : AppComponent){}
@@ -29,7 +28,7 @@ export class MainComponent implements OnInit,OnDestroy {
     lamp2 : string ='2';
     lamp3 : string ='3';
     lamp4 : string ='4';
-  value: string = '50';
+    value: string = '50';
   clickTurnOn() {
     ons.notification.alert('Clicked!');
   }
