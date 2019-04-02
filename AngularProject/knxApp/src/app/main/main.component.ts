@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input, SimpleChanges, SimpleChange } from '@angular/core';
 import * as ons from 'onsenui';
 import { AppComponent } from "../app.component";
 
@@ -13,6 +13,10 @@ export interface Foo {
 })
 
 export class MainComponent implements OnInit,OnDestroy {
+
+  @Input() data;
+
+
   
     ngOnDestroy(): void {
         throw new Error("Method not implemented.");
@@ -20,6 +24,7 @@ export class MainComponent implements OnInit,OnDestroy {
 
     constructor ( private App : AppComponent){}
 
+    isChecked = false;
     lamp1 : string ='1';
     lamp2 : string ='2';
     lamp3 : string ='3';
@@ -27,6 +32,14 @@ export class MainComponent implements OnInit,OnDestroy {
   value: string = '50';
   clickTurnOn() {
     ons.notification.alert('Clicked!');
+  }
+  ngOnChanges(changes: SimpleChanges){
+    const data: SimpleChange = changes.data;
+    //console.log('prev value: ', data.previousValue);
+    //console.log('got data: ', data.currentValue);
+    
+    this.isChecked = data.currentValue;
+    console.log("from main " + this.isChecked)
   }
   ngOnInit() {
     this.App.subscribe('knx/action')

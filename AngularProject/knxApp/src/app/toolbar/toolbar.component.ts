@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, EventEmitter, Output } from '@angular/core';
 import { AppComponent } from '../app.component';
 
 @Component({
@@ -12,12 +12,17 @@ export class ToolbarComponent implements OnInit {
 
   checked : boolean = false;
 
+  
   ngOnInit() {
   }
+
+  @Output() switchCheck = new EventEmitter();
+Checked = false;
 
   connectToDevice(){
     this.checked = !this.checked
     if(this.checked) this.App.sendMsg('knx/action', 'connect', null)
     else {this.App.sendMsg('knx/action', 'disconnect',null)}
+    this.switchCheck.emit(this.checked)
   }
 }

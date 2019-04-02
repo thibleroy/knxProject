@@ -8,6 +8,7 @@ import { HomeComponent } from './home/home.component';
 import { MainComponent } from './main/main.component';
 import { MqttService, NgxMqttClientModule } from 'ngx-mqtt-client';
 import { ToolbarComponent } from './toolbar/toolbar.component';
+import { LoginComponent } from './login/login.component';
 
 @NgModule({
   schemas: [
@@ -17,7 +18,8 @@ import { ToolbarComponent } from './toolbar/toolbar.component';
     AppComponent,
     HomeComponent,
     MainComponent,
-    ToolbarComponent
+    ToolbarComponent,
+    LoginComponent
   ],
   imports: [
     BrowserModule,

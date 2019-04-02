@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, Output, EventEmitter} from '@angular/core';
 import { MqttService, ConnectionStatus, SubscriptionGrant } from 'ngx-mqtt-client';
 import { IClientOptions } from 'mqtt';
 
@@ -15,6 +15,7 @@ export class AppComponent {
     messages: Array<Foo> = [];
 
   status: Array<string> = [];
+    switchChecked: boolean = false;
 
   constructor(private _mqttService: MqttService) {
 
@@ -27,6 +28,11 @@ export class AppComponent {
       });
   }
 
+
+  isChecked (check){
+      console.log(check);
+      this.switchChecked = check;
+  }
   /**
    * Manages connection manually.
    * If there is an active connection this will forcefully disconnect that first.

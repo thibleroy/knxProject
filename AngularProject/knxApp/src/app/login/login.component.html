@@ -1,0 +1,14 @@
+<ons-page>
+  <ons-toolbar>Connect</ons-toolbar>
+    <div style="text-align: center; margin-top: 30px;">
+      <p>
+        <ons-input modifier="underbar" placeholder="Username" float [(value)]="user"></ons-input>
+      </p>
+      <p>
+        <ons-input modifier="underbar" type="password" placeholder="Password" float [(value)]="pwd"></ons-input>
+      </p>
+      <p style="margin-top: 30px;">
+        <ons-button (click)="login()">Connect</ons-button>
+      </p>
+    </div>
+  </ons-page>

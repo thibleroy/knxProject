@@ -1,7 +1,7 @@
 <ons-page>
   <ons-toolbar></ons-toolbar>
   <div class="background"></div>
-  <div class="content">
+  <div class="content" *ngIf="isChecked">
       <ons-list style="min-height : 100%">
           <ons-list-header>Vérifiez que le device est bien connecté (en haut à droite)</ons-list-header>
           <ons-list-item><ons-button (click)="sendMsg('knx/action','on', 'Chenillard')">Turn ON en FAIT</ons-button></ons-list-item>
@@ -13,7 +13,7 @@
        <ons-input placeholder="3" [(value)]="lamp3"></ons-input>
        <ons-input placeholder="4" [(value)]="lamp4"></ons-input>
       </ons-row>
-      <ons-button (click)="sendMsg('knx/action','on', 'orderChenillard')">Démarre le chenillard richard</ons-button> <br>
+      <ons-button (click)="sendMsg('knx/action','on', 'orderChenillard')" >Démarre le chenillard richard</ons-button> <br>
       <ons-range modifier="material" [(value)]="value" (change)="sendMsg('knx/action',[(value)])"></ons-range><br>{{value}}<br>
       <img src="assets/img/reverse.png" (click)="sendMsg('knx/action','reverse')">
     </div>
