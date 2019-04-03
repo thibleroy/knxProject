@@ -64,43 +64,40 @@ export class AppComponent implements OnDestroy{
                         switch (msg.action){ // {"action" : "l1", "value" : "0"}
                             case "l1" : 
                             if (msg.value=="1"){
-                                console.log("l1 allumée")
                                 this.lampsCom[0]=1;
                                 this.lamps=this.lampsCom;
                                 }else {
                                     this.lampsCom[0]=0;
                                     this.lamps=this.lampsCom;
-                                    console.log("l1 éteinte")}
+                                }
                             break
                             case "l2" : 
                             if (msg.value=="1"){
-                                console.log("l2 allumée")
                                 this.lampsCom[1]=1;
                                 this.lamps=this.lampsCom;
                                 }else {
                                     this.lampsCom[1]=0;
                                     this.lamps=this.lampsCom;
-                                    console.log("l2 éteinte")}
+                                }
                             break
                             case "l3" : 
                             if (msg.value=="1"){
-                                console.log("l3 allumée")
                                 this.lampsCom[2]=1;
                                 this.lamps=this.lampsCom;
                                 }else {
                                     this.lampsCom[2]=0;
                                     this.lamps=this.lampsCom;
-                                    console.log("l3 éteinte")}
+                                }
                             break
                             case "l4" : 
                             if (msg.value=="1"){
-                                console.log("l4 allumée")
+
                                 this.lampsCom[3]=1;
                                 this.lamps=this.lampsCom;
                                 }else {
                                     this.lampsCom[3]=0;
                                     this.lamps=this.lampsCom;
-                                    console.log("l4 éteinte")}
+                                }
                             break
                         }
                       }

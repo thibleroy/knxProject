@@ -2,6 +2,18 @@
   <ons-toolbar></ons-toolbar>
   <div class="background"></div>
   <div class="content">
+      <ons-card>
+          <ons-row>
+          <img src="assets/img/light-off.png" *ngIf="lamps[0]==0">
+          <img src="assets/img/light-on.png" *ngIf="lamps[0]==1">
+          <img src="assets/img/light-off.png" *ngIf="lamps[1]==0">
+          <img src="assets/img/light-on.png" *ngIf="lamps[1]==1">
+          <img src="assets/img/light-off.png" *ngIf="lamps[2]==0">
+          <img src="assets/img/light-on.png" *ngIf="lamps[2]==1">
+          <img src="assets/img/light-off.png" *ngIf="lamps[3]==0">
+          <img src="assets/img/light-on.png" *ngIf="lamps[3]==1">
+        </ons-row>
+        </ons-card>
       <ons-list style="min-height : 100%">
           <ons-list-header>Vérifiez que le device est bien connecté (en haut à droite)</ons-list-header>
           <ons-list-item><ons-button (click)="sendMsg('knx/action','on', 'Chenillard')">Turn ON en FAIT</ons-button></ons-list-item>
@@ -17,18 +29,6 @@
       <ons-range modifier="material" [(value)]="value" (change)="sendMsg('knx/action',[(value)],null)"></ons-range><br>{{value}}<br>
       <img src="assets/img/reverse.png" (click)="sendMsg('knx/action','reverse',null)">
     </div>
-    <ons-card>
-      <ons-row>
-      <img src="assets/img/light-off.png" *ngIf="lamps[0]==0">
-      <img src="assets/img/light-on.png" *ngIf="lamps[0]==1">
-      <img src="assets/img/light-off.png" *ngIf="lamps[1]==0">
-      <img src="assets/img/light-on.png" *ngIf="lamps[1]==1">
-      <img src="assets/img/light-off.png" *ngIf="lamps[2]==0">
-      <img src="assets/img/light-on.png" *ngIf="lamps[2]==1">
-      <img src="assets/img/light-off.png" *ngIf="lamps[3]==0">
-      <img src="assets/img/light-on.png" *ngIf="lamps[3]==1">
-    </ons-row>
-    </ons-card>
     <ons-row>
       <ons-card>
         Maquette 1
