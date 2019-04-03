@@ -18,8 +18,9 @@ interface MqttMessage {
 })
 export class AppComponent implements OnDestroy{
     messages: Array<Foo> = [];
-
-  status: Array<string> = [];
+    lampsCom : Array<number> = [0,0,0,0]
+    lamps : Array<number> = [0,0,0,0];
+    status: Array<string> = [];
     switchChecked: boolean = false;
 
   constructor(private _mqttService: MqttService) {
@@ -64,22 +65,42 @@ export class AppComponent implements OnDestroy{
                             case "l1" : 
                             if (msg.value=="1"){
                                 console.log("l1 allumée")
-                                }else {console.log("l1 éteinte")}
+                                this.lampsCom[0]=1;
+                                this.lamps=this.lampsCom;
+                                }else {
+                                    this.lampsCom[0]=0;
+                                    this.lamps=this.lampsCom;
+                                    console.log("l1 éteinte")}
                             break
                             case "l2" : 
                             if (msg.value=="1"){
                                 console.log("l2 allumée")
-                                }else {console.log("l2 éteinte")}
+                                this.lampsCom[1]=1;
+                                this.lamps=this.lampsCom;
+                                }else {
+                                    this.lampsCom[1]=0;
+                                    this.lamps=this.lampsCom;
+                                    console.log("l2 éteinte")}
                             break
                             case "l3" : 
                             if (msg.value=="1"){
                                 console.log("l3 allumée")
-                                }else {console.log("l3 éteinte")}
+                                this.lampsCom[2]=1;
+                                this.lamps=this.lampsCom;
+                                }else {
+                                    this.lampsCom[2]=0;
+                                    this.lamps=this.lampsCom;
+                                    console.log("l3 éteinte")}
                             break
                             case "l4" : 
                             if (msg.value=="1"){
                                 console.log("l4 allumée")
-                                }else {console.log("l4 éteinte")}
+                                this.lampsCom[3]=1;
+                                this.lamps=this.lampsCom;
+                                }else {
+                                    this.lampsCom[3]=0;
+                                    this.lamps=this.lampsCom;
+                                    console.log("l4 éteinte")}
                             break
                         }
                       }

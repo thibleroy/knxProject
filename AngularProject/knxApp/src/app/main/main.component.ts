@@ -23,6 +23,7 @@ export class MainComponent implements OnInit,OnDestroy, OnChanges {
 
     constructor ( private App : AppComponent){}
 
+    lamps : Array<number> = [0,0,0,0];
     isChecked = false;
     lamp1 : string ='1';
     lamp2 : string ='2';
@@ -37,8 +38,9 @@ export class MainComponent implements OnInit,OnDestroy, OnChanges {
     //console.log('prev value: ', data.previousValue);
     //console.log('got data: ', data.currentValue);
     
-    this.isChecked = data.currentValue;
-    console.log("from main " + this.isChecked)
+    this.lamps = data.currentValue;
+    console.log("from main " + data.currentValue)
+    console.log("from main " + this.lamps)
   }
   ngOnInit() {
     this.App.subscribe('knx/action')
