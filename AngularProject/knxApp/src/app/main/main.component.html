@@ -3,7 +3,7 @@
   <div class="background"></div>
   <div class="content">
       <ons-card>
-          <ons-row>
+          <ons-row style="justify-content : center">
           <img src="assets/img/light-off.png" *ngIf="lamps[0]==0">
           <img src="assets/img/light-on.png" *ngIf="lamps[0]==1">
           <img src="assets/img/light-off.png" *ngIf="lamps[1]==0">
@@ -16,17 +16,16 @@
         </ons-card>
       <ons-list style="min-height : 100%">
           <ons-list-header>Vérifiez que le device est bien connecté (en haut à droite)</ons-list-header>
-          <ons-list-item><ons-button (click)="sendMsg('knx/action','on', 'Chenillard')">Turn ON en FAIT</ons-button></ons-list-item>
     <div style="text-align: center; margin: 10px">
-       <br>
-       <ons-row>
-       <ons-input placeholder="1" [(value)]="lamp1"></ons-input>
-       <ons-input placeholder="2" [(value)]="lamp2"></ons-input>
-       <ons-input placeholder="3" [(value)]="lamp3"></ons-input>
-       <ons-input placeholder="4" [(value)]="lamp4"></ons-input>
-      </ons-row>
-      <ons-button (click)="sendMsg('knx/action','on', 'orderChenillard')" >Démarre le chenillard richard</ons-button> <br>
-      <ons-range modifier="material" [(value)]="value" (change)="sendMsg('knx/action',[(value)],null)"></ons-range><br>{{value}}<br>
+      <ons-list-item><ons-button (click)="sendMsg('knx/action','on', '1, 2, 3, 4')">Démarrer</ons-button></ons-list-item>
+      <ons-list-item><ons-button (click)="sendMsg('knx/action','off', null)">Arrêter</ons-button></ons-list-item>
+        <ons-list-item expandable>
+        Changer de pattern
+        <div class="expandable-content">
+            <ons-list-item *ngFor="let c of chenillards" tappable (click)="sendMsg('knx/action','on', c.value)">{{c.value}}</ons-list-item>
+        </div>
+        </ons-list-item>
+      <ons-range modifier="material" [(value)]="value" (change)="sendMsg('knx/action','speed', (value))"></ons-range><br>{{value}}<br>
       <img src="assets/img/reverse.png" (click)="sendMsg('knx/action','reverse',null)">
     </div>
     <ons-row>
@@ -40,6 +39,18 @@
     </ons-list>
 </div>
   <ons-fab ripple position="bottom right">
-      <ons-icon icon="md-plus"></ons-icon>
+      <ons-icon icon="md-plus" (click)="actionSheet.show()"></ons-icon>
     </ons-fab>
 </ons-page>
+
+
+<ons-action-sheet #actionSheet cancelable [attr.animation]="animation">
+    <div class="action-sheet-mask"></div>
+    <div class="action-sheet">
+      <div class="action-sheet-title">Choisissez l'ordre du chenillard à ajouter</div>
+      <div *ngFor="let item of order;">
+      <ons-action-sheet-button icon="md-square-o" (click)="choseChenillard(item)">Lampe {{item}}</ons-action-sheet-button>
+      </div>
+      <ons-action-sheet-button icon="md-close" (click)="actionSheet.hide()">Cancel</ons-action-sheet-button>
+    </div>
+  </ons-action-sheet>

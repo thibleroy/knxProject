@@ -20,36 +20,42 @@ export class MainComponent implements OnInit,OnDestroy, OnChanges {
   
     ngOnDestroy(): void {
     }
-
     constructor ( private App : AppComponent){}
-
+  
+    chenillards = [{value : "1, 2, 3, 4"}];
     lamps : Array<number> = [0,0,0,0];
     isChecked = false;
-    lamp1 : string ='1';
-    lamp2 : string ='2';
-    lamp3 : string ='3';
-    lamp4 : string ='4';
     value: string = '50';
-  clickTurnOn() {
-    ons.notification.alert('Clicked!');
-  }
+    order = [1,2,3,4];
+    newOrder = [];
+
   ngOnChanges(changes: SimpleChanges){
     const data: SimpleChange = changes.data;
     //console.log('prev value: ', data.previousValue);
     //console.log('got data: ', data.currentValue);
-    
     this.lamps = data.currentValue;
-    console.log("from main " + data.currentValue)
-    console.log("from main " + this.lamps)
   }
   ngOnInit() {
     this.App.subscribe('knx/action')
     this.App.subscribe('knx/state')
   }
   sendMsg(topic,action,value){
-    if (value == 'Chenillard') {value=["1","2","3","4"]}
-    if (value == 'orderChenillard') {value=[this.lamp1,this.lamp2,this.lamp3,this.lamp4]}
+    if (value != null && value.includes(', ')){
+      let o = value.split(", ");
+      value=[o[0],o[1],o[2],o[3]]}
+      
       this.App.sendMsg(topic,action,value)
   }
 
+  choseChenillard(value){
+    
+    this.newOrder.push(value)
+    this.order.splice(this.order.indexOf(value),1);
+    if (this.order.length==0){
+      let enFAIT = {value : ""+this.newOrder[0]+", "+this.newOrder[1]+", "+this.newOrder[2]+", "+ this.newOrder[3]}
+      this.chenillards.push(enFAIT);
+      this.order = [1,2,3,4];
+      this.newOrder =[];
+    }
+  }
 }

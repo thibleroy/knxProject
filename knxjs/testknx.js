@@ -27,8 +27,7 @@ client.on('message', (topic, message) => {
       chen = false
       break
     case 'speed':
-      time = 5000 / msg.value
-
+      time = 5000 / parseInt(msg.value)
       break
     case 'reverse':
       inverse = !inverse

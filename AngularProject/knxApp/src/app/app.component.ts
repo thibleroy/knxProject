@@ -36,7 +36,6 @@ export class AppComponent implements OnDestroy{
 
 
   isChecked (check){
-      console.log(check);
       this.switchChecked = check;
   }
   /**
