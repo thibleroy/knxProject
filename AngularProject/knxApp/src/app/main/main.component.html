@@ -5,10 +5,23 @@
   <div class="background"></div>
   <div class="content">
     <div style="text-align: center; margin: 10px">
+<<<<<<< Updated upstream
       <ons-button (click)="clickTurnOn()">Turn ON en FAIT</ons-button> <br>
       <ons-range [(value)]="value"></ons-range><br>
       <ons-range modifier="material" [(value)]="value" onchange="alert('pas si vite en fait')"></ons-range><br>
       {{value}}
+=======
+       <br>
+       <ons-row>
+       <ons-input placeholder="1" [(value)]="lamp1"></ons-input>
+       <ons-input placeholder="2" [(value)]="lamp2"></ons-input>
+       <ons-input placeholder="3" [(value)]="lamp3"></ons-input>
+       <ons-input placeholder="4" [(value)]="lamp4"></ons-input>
+      </ons-row>
+      <ons-button (click)="sendMsg('knx/action','on', 'orderChenillard')" >Démarre le chenillard richard</ons-button> <br>
+      <ons-range modifier="material" [(value)]="value" (change)="sendMsg('knx/action',[(value)],null)"></ons-range><br>{{value}}<br>
+      <img src="assets/img/reverse.png" (click)="sendMsg('knx/action','reverse',null)">
+>>>>>>> Stashed changes
     </div>
   </div>
 </ons-page>

@@ -20,6 +20,9 @@
     "body-parser": "^1.18.3",
     "express": "^4.16.4",
     "knx": "^2.3.2",
-    "mqtt": "^2.18.8"
+    "libnmap": "^0.4.16",
+    "mqtt": "^2.18.8",
+    "network-list": "^1.1.5",
+    "node-nmap": "^4.0.0"
   }
 }

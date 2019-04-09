@@ -1,161 +1,91 @@
-const knx = require('knx');
 const mqtt = require('mqtt')
-let chen
-let inverse
-let time
-let connection
-let isConnected = false
+const Maquette = require('./maquette')
+//définit les maquettes connectées
+let maquettes = []
+//définit l'ensemble des maquettes découvertes
+let knxs = []
+Discover()
 const client = mqtt.connect('tcp://localhost:1883')
+//const client = mqtt.connect('tcp://3.83.149.37:1883')
 client.on("connect", () => {
   console.log('connected to broker')
-  client.subscribe('knx/action')
+  client.subscribe('knx/action/#')
 })
 client.on('message', (topic, message) => {
-  //"{"action":"connect"}"
+  let ip = topic.split('knx/action/')[0]
   let msg = JSON.parse(message)
+  console.log(msg)
   switch (msg.action) {
-    case 'connect':
-      letsConnectMan()
+    case 'discover':
+    
+      client.publish('knx/state', JSON.stringify({ action: 'discover', value: knxs }))
       break
-      case 'disconnect':
-      connection.Disconnect()
+    case 'connect':
+      letsConnectMan(ip)
+      break
+    case 'disconnect':
+      maquettes.forEach(m => {
+        if (m.getIp() === ip) {
+          m.disconnect()
+        }
+      })
       break
     case 'on':
-      chenillard(msg.value[0], msg.value[1], msg.value[2], msg.value[3])
+      maquettes.forEach(m => {
+        if (m.getIp() === ip) {
+          m.chenillard(msg.value)
+        }
+      })
       break
     case 'off':
-      chen = false
+      maquettes.forEach(m => {
+        if (m.getIp() === ip) {
+          m.chenillard.stop()
+        }
+      })
       break
     case 'speed':
-      time = 5000 / msg.value
-
+      maquettes.forEach(m => {
+        if (m.getIp() === ip) {
+          if (parseInt(msg.value) == 0) {
+            m.chenillard.setTime(5000)
+          }
+          else m.chenillard.setTime(50000 / parseInt(msg.value))
+        }
+      })
       break
     case 'reverse':
-      inverse = !inverse
+      maquettes.forEach(m => {
+        if (m.getIp() === ip) {
+          m.chenillard.reverse()
+        }
+      })
       break
     default: break
   }
 })
-function eventAction(numEvent) {
-  switch (numEvent) {
-    case 1:
-      chenillard(1, 2, 3, 4)
-      break
-    case 2:
-      inverse = !inverse
-      break
 
-    case 3:
-      if (time >= 500) { time = time - 200 }
-      break
-    case 4:
-      time = time + 200
-      break
-  }
+
+function letsConnectMan(ip) {
+  m = new Maquette(ip)
+  maquettes.push(m)
 }
 
-function letsConnectMan() {
-  connection = new knx.Connection({
 
-    // ip address and port of the KNX router or interface
-    ipAddr: '192.168.0.6',
-    ipPort: 3671,
-    // define your event handlers here:
-    handlers: {
-      // wait for connection establishment before sending anything!
-      connected: function () {
-        isConnected = true
-        chen = false
-        inverse = false
-        time = 1000
-        console.log('Hurray, I can talk KNX!');
-              }
-      ,
-      // get notified for all KNX events:
-      event: function (evt, src, dest, value) {
-        console.log("event: %s, src: %j, dest: %j, value: %j", evt, src, dest, value);
-        console.log("dede" + dest + "dede")
-        eventAction(parseInt(dest.trim().split("0/3/")[1])) //on récup le numéro du bouton : 0/3/-->?<-- et on lance la fonction
+function Discover() {
+  const { spawn } = require('child_process');
+  const knxdisc = spawn('sudo', ['nmap', '--script', 'knx-gateway-discover', '-e', 'wlp3s0']);
+  let str = ''
+  knxdisc.stdout.on('data', (data) => {
+    str += data
+  });
 
-      },
-      // get notified on connection errors
-      error: function (connstatus) {
-        console.log("**** ERROR: %j", connstatus);
-        connection.write("0/1/" + nb, 1);
-      },
-
-    }
-  })
-}
-function start_light(nb) {
-  if (isConnected) {
-    console.log("j'allume la lampe : " + nb)
-    connection.write("0/1/" + nb, 1);
-  }
-}
-function down_light(nb) {
-  if (isConnected) {
-    console.log("j'éteins la lampe : " + nb)
-    connection.write("0/1/" + nb, 0);
-  }
-}
-async function chenillard(l1, l2, l3, l4) {
-  chen = !chen
-  while (chen && isConnected) {
-    if (chen) {
-      if (inverse) {
-        down_light(l1);
-        start_light(l4);
+  knxdisc.on('close', () => {
+    let tab = str.split('192.168.0')
+    tab.forEach(el => {
+      if (el.charAt(0) == '.') {
+        knxs.push('192.168.0' + el.split(':')[0])
       }
-      else {
-        down_light(l4);
-        start_light(l1);
-      }
-      await sleep(time);
-    }
-    else break
-
-    if (chen) {
-      if (inverse) {
-        down_light(l4);
-        start_light(l3);
-      }
-      else {
-        down_light(l1);
-        start_light(l2);
-      }
-      await sleep(time);
-    }
-    else break
-
-    if (chen) {
-      if (inverse) {
-        down_light(l3);
-        start_light(l2);
-      }
-      else {
-        down_light(l2);
-        start_light(l3);
-      }
-      await sleep(time);
-    }
-    else break
-
-    if (chen) {
-      if (inverse) {
-        down_light(l2);
-        start_light(l1);
-      }
-      else {
-        down_light(l3);
-        start_light(l4);
-      }
-      await sleep(time);
-    }
-    else break
-  }
-}
-function sleep(ms) {
-  console.log("sleep fonction")
-  return new Promise(resolve => setTimeout(resolve, ms));
+    })
+  });
 }
