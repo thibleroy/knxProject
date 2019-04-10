@@ -1,7 +1,8 @@
 import { Component, OnInit, OnDestroy, Input, SimpleChanges, SimpleChange, OnChanges } from '@angular/core';
 import * as ons from 'onsenui';
 import { AppComponent } from "../app.component";
-
+import {MaquetteCardComponent} from "../maquette-card/maquette-card.component";
+import { Action } from 'rxjs/internal/scheduler/Action';
 export interface Foo {
     bar: string;
 }
@@ -15,19 +16,25 @@ export interface Foo {
 export class MainComponent implements OnInit,OnDestroy, OnChanges {
 
   @Input() data;
+  makettes: string[] = ['0.5','0.6']
+  maketOrder: any[] = [];
 
 
   
     ngOnDestroy(): void {
+     
     }
     constructor ( private App : AppComponent){}
   
-    chenillards = [{value : "1, 2, 3, 4"}];
+    choseMaquette : boolean = true;
+    maquettes = ["0.5","0.6"]
+    chenillards = [];
     lamps : Array<number> = [0,0,0,0];
     isChecked = false;
     value: string = '50';
     order = [1,2,3,4];
     newOrder = [];
+    main=false;
 
   ngOnChanges(changes: SimpleChanges){
     const data: SimpleChange = changes.data;
@@ -36,26 +43,43 @@ export class MainComponent implements OnInit,OnDestroy, OnChanges {
     this.lamps = data.currentValue;
   }
   ngOnInit() {
-    this.App.subscribe('knx/action')
-    this.App.subscribe('knx/state')
+    this.chenillards.push({maquetteOrder : this.maquettes, chenillardOrder : [1,2,3,4]})
   }
   sendMsg(topic,action,value){
-    if (value != null && value.includes(', ')){
-      let o = value.split(", ");
-      value=[o[0],o[1],o[2],o[3]]}
+    switch(action){
+      case 'on' :
+      break
+      default : break
+    }
+    
       
-      this.App.sendMsg(topic,action,value)
+      this.App.sendMsg(topic,action,value,"allConnected")
   }
 
   choseChenillard(value){
-    
+    //source des maquettes : makettes
+   //ordre des maquettes : maketOrder
+    if (this.makettes.length > 1){
+    this.makettes.splice(this.makettes.indexOf(value),1);
+    this.maketOrder.push(value)
+    }
+    else if (this.makettes.length == 1){
+    this.makettes.splice(this.makettes.indexOf(value),1);
+    this.maketOrder.push(value)
+    this.choseMaquette=false
+    }
+    else {
     this.newOrder.push(value)
     this.order.splice(this.order.indexOf(value),1);
     if (this.order.length==0){
-      let enFAIT = {value : ""+this.newOrder[0]+", "+this.newOrder[1]+", "+this.newOrder[2]+", "+ this.newOrder[3]}
+      let enFAIT = {maquetteOrder : this.maketOrder, chenillardOrder : this.newOrder}
       this.chenillards.push(enFAIT);
       this.order = [1,2,3,4];
       this.newOrder =[];
+      this.choseMaquette=true;
+      this.makettes = ["0.5","0.6"]
+      this.maketOrder=[]
     }
   }
+}
 }

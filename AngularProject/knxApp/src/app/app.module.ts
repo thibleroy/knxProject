@@ -9,6 +9,7 @@ import { MainComponent } from './main/main.component';
 import { MqttService, NgxMqttClientModule } from 'ngx-mqtt-client';
 import { ToolbarComponent } from './toolbar/toolbar.component';
 import { LoginComponent } from './login/login.component';
+import { MaquetteCardComponent } from './maquette-card/maquette-card.component';
 
 @NgModule({
   schemas: [
@@ -19,14 +20,17 @@ import { LoginComponent } from './login/login.component';
     HomeComponent,
     MainComponent,
     ToolbarComponent,
-    LoginComponent
+    LoginComponent,
+    MaquetteCardComponent
   ],
   imports: [
     BrowserModule,
     OnsenModule,
     AppRoutingModule,
     NgxMqttClientModule.withOptions({
-      host: '192.168.0.108',
+      //broker aws : 3.83.149.37
+      //broker local : 192.168.0.108
+      host: '3.83.149.37',
       protocol: 'ws',
       port: 9001,
       clientId: 'Duncan'

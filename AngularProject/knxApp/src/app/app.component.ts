@@ -1,4 +1,4 @@
-import {Component, Output, EventEmitter, OnDestroy} from '@angular/core';
+import {Component, Output, EventEmitter, OnDestroy, OnInit} from '@angular/core';
 import { MqttService, ConnectionStatus, SubscriptionGrant } from 'ngx-mqtt-client';
 import { IClientOptions } from 'mqtt';
 import { stringify } from '@angular/compiler/src/util';
@@ -6,7 +6,7 @@ import { stringify } from '@angular/compiler/src/util';
 export interface Foo {
     bar: string;
 }
-interface MqttMessage {
+export interface MqttMessage {
     action:    string;
     value:     string;
   }
@@ -16,7 +16,12 @@ interface MqttMessage {
     templateUrl: './app.component.html',
     styleUrls: ['./app.component.css']
 })
-export class AppComponent implements OnDestroy{
+export class AppComponent implements OnDestroy, OnInit{
+    ngOnInit(): void {
+    this.subscribe('knx/action')
+    this.subscribe('knx/state')
+    this.sendMsg('knx/action','discover',null,"")
+    }
     messages: Array<Foo> = [];
     lampsCom : Array<number> = [0,0,0,0]
     lamps : Array<number> = [0,0,0,0];
@@ -112,8 +117,8 @@ export class AppComponent implements OnDestroy{
   /**
    * Sends message to fooBar topic.
    */
-  sendMsg(topic,action,extra): void {
-      this._mqttService.publishTo("" + topic, {action : action, value: extra, }).subscribe({
+  sendMsg(topic,action,extra, ip): void {
+      this._mqttService.publishTo("" + topic+"/"+ip, {action : action, value: extra, }).subscribe({
           next: () => {
               this.status.push('Message sent to : '+topic);
           },

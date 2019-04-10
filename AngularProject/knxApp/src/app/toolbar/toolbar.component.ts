@@ -19,10 +19,10 @@ export class ToolbarComponent implements OnInit {
   @Output() switchCheck = new EventEmitter();
 Checked = false;
 
-  connectToDevice(){
+  /*connectToDevice(){
     this.checked = !this.checked
     if(this.checked) this.App.sendMsg('knx/action', 'connect', null)
     else {this.App.sendMsg('knx/action', 'disconnect',null)}
     this.switchCheck.emit(this.checked)
-  }
+  }*/
 }
