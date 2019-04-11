@@ -19,7 +19,7 @@ export class LoginComponent implements OnInit {
   login() {
     if (this.user === 'dun' && this.pwd === 'dun') {
       ons.notification.toast('Vous êtes connecté !', {timeout: 2000});
-      this.router.navigateByUrl('/test');
+      this.router.navigateByUrl('/main');
     } else {
       ons.notification.toast('Identifiant ou mot de passe incorrect !', {timeout: 2000});
     }
