@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 var knx = require ('knx');
 var chen
 var inverse
@@ -19,6 +20,53 @@ const bodyParser = require("body-parser");
     app.listen(3000, function () {
      console.log("App listening on port 3000 ");
     });
+=======
+const knx = require('knx');
+const mqtt = require('mqtt');
+let chen
+let inverse
+let time
+let connection
+let isConnected = false
+const client = mqtt.connect('tcp://3.83.149.37')
+client.on("connect", () => {
+  console.log('connected to broker')
+  client.subscribe('knx/action')
+})
+client.on('message', (topic, message) => {
+  //"{"action":"connect"}"
+  let msg = JSON.parse(message)
+  switch (msg.action) {
+    case 'connect':
+      letsConnectMan()
+      break
+      case 'disconnect':
+      connection.Disconnect()
+      break
+    case 'on':
+      chenillard(msg.value[0], msg.value[1], msg.value[2], msg.value[3])
+      break
+    case 'off':
+      chen = false
+      break
+    case 'speed':
+    time = 50000 / parseInt(msg.value)
+      break
+    case 'reverse':
+      inverse = !inverse
+      break
+    default: break
+  }
+})
+function eventAction(numEvent) {
+  switch (numEvent) {
+    case 1:
+      chenillard(1, 2, 3, 4)
+      break
+    case 2:
+      inverse = !inverse
+      break
+>>>>>>> Stashed changes
 
 app.get("/disconnect", function (req, res) {
   res.send("disConnecting");
@@ -38,10 +86,34 @@ app.get("/disconnect", function (req, res) {
   letsConnectMan()
  });
 
+<<<<<<< Updated upstream
 app.get("/", function (req, res) {
   res.send("Hey, I am responding to your request!");
  });
 
+=======
+function letsConnectMan() {
+  connection = new knx.Connection({
+    // ip address and port of the KNX router or interface
+    ipAddr: '192.168.0.6',
+    ipPort: 3671,
+    // define your event handlers here:
+    handlers: {
+      // wait for connection establishment before sending anything!
+      connected: function () {
+        isConnected = true
+        chen = false
+        inverse = false
+        time = 1000
+        console.log('Hurray, I can talk KNX!');
+              }
+      ,
+      // get notified for all KNX events:
+      event: function (evt, src, dest, value) {
+        console.log("event: %s, src: %j, dest: %j, value: %j", evt, src, dest, value);
+        console.log("dede" + dest + "dede")
+        eventAction(parseInt(dest.trim().split("0/3/")[1])) //on récup le numéro du bouton : 0/3/-->?<-- et on lance la fonction
+>>>>>>> Stashed changes
 
 //get est une requete du serveur vers le client
 app.get("/on", function (req, res) {// req est l'info envoyée du client au serveur, res est la réponse de celui-ci
