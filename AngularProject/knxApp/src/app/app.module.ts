@@ -10,6 +10,7 @@ import { MqttService, NgxMqttClientModule } from 'ngx-mqtt-client';
 import { ToolbarComponent } from './toolbar/toolbar.component';
 import { LoginComponent } from './login/login.component';
 import { MaquetteCardComponent } from './maquette-card/maquette-card.component';
+import { MaquetteCarouselComponent } from './maquette-carousel/maquette-carousel.component';
 
 @NgModule({
   schemas: [
@@ -21,7 +22,8 @@ import { MaquetteCardComponent } from './maquette-card/maquette-card.component';
     MainComponent,
     ToolbarComponent,
     LoginComponent,
-    MaquetteCardComponent
+    MaquetteCardComponent,
+    MaquetteCarouselComponent
   ],
   imports: [
     BrowserModule,
