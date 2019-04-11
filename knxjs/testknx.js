@@ -5,7 +5,7 @@ let inverse
 let time
 let connection
 let isConnected = false
-const client = mqtt.connect('tcp://3.83.149.37')
+const client = mqtt.connect('tcp://localhost:1883')
 client.on("connect", () => {
   console.log('connected to broker')
   client.subscribe('knx/action')
@@ -13,12 +13,15 @@ client.on("connect", () => {
 client.on('message', (topic, message) => {
   //"{"action":"connect"}"
   let msg = JSON.parse(message)
+
+  console.log(msg)
   switch (msg.action) {
     case 'connect':
       letsConnectMan()
       break
       case 'disconnect':
-      connection.Disconnect()
+
+      if (isConnected) connection.Disconnect()
       break
     case 'on':
       chenillard(msg.value[0], msg.value[1], msg.value[2], msg.value[3])
@@ -27,7 +30,11 @@ client.on('message', (topic, message) => {
       chen = false
       break
     case 'speed':
-      time = 5000 / parseInt(msg.value)
+    if (parseInt(msg.value)==0){
+      time = 50000
+    }
+    else time = 50000 / parseInt(msg.value)
+      
       break
     case 'reverse':
       inverse = !inverse
@@ -57,7 +64,7 @@ function letsConnectMan() {
   connection = new knx.Connection({
 
     // ip address and port of the KNX router or interface
-    ipAddr: '192.168.0.6',
+    ipAddr: '192.168.0.5',
     ipPort: 3671,
     // define your event handlers here:
     handlers: {
@@ -72,11 +79,19 @@ function letsConnectMan() {
       ,
       // get notified for all KNX events:
       event: function (evt, src, dest, value) {
+        console.log('value0',value)
+
+        obj={
+          action:'l'+dest.trim().split("0/2/")[1],
+          value:JSON.parse(JSON.stringify(value)).data[0]
+         }
+         console.log(JSON.stringify(obj))
+         client.publish('knx/state',JSON.stringify(obj))
         console.log("event: %s, src: %j, dest: %j, value: %j", evt, src, dest, value);
         console.log("dede" + dest + "dede")
         eventAction(parseInt(dest.trim().split("0/3/")[1])) //on récup le numéro du bouton : 0/3/-->?<-- et on lance la fonction
-
-      },
+     
+      }},
       // get notified on connection errors
       error: function (connstatus) {
         console.log("**** ERROR: %j", connstatus);
@@ -84,7 +99,7 @@ function letsConnectMan() {
       },
 
     }
-  })
+  )
 }
 function start_light(nb) {
   if (isConnected) {
