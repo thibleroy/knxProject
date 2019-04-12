@@ -2,6 +2,7 @@ import {Component, Output, EventEmitter, OnDestroy, OnInit} from '@angular/core'
 import { MqttService, ConnectionStatus, SubscriptionGrant } from 'ngx-mqtt-client';
 import { IClientOptions } from 'mqtt';
 import { stringify } from '@angular/compiler/src/util';
+import { Router } from '@angular/router';
 
 export interface Foo {
     bar: string;
@@ -25,19 +26,26 @@ export class AppComponent implements OnDestroy, OnInit{
     messages: Array<Foo> = [];
     lampsCom : Array<number> = [0,0,0,0]
     lamps : Array<number> = [0,0,0,0];
-    status: Array<string> = [];
+    status = [];
     switchChecked: boolean = false;
 
-  constructor(private _mqttService: MqttService) {
+  constructor(private _mqttService: MqttService, private router : Router) {
 
       /**
        * Tracks connection status.
        */
-      this._mqttService.status().subscribe((s: ConnectionStatus) => {
-          const status = s === ConnectionStatus.CONNECTED ? 'CONNECTED' : 'DISCONNECTED';
-          this.status.push(`Mqtt client connection status: ${status}`);
-      });
+      
   }
+
+  isLogged():boolean{
+      let bool=false;
+    this._mqttService.status().subscribe((s: ConnectionStatus) => {
+        const status = s === ConnectionStatus.CONNECTED ? 'CONNECTED' : 'DISCONNECTED';
+        bool = (status=='CONNECTED')
+    });
+    return bool
+  }
+
 
 
   isChecked (check){
@@ -62,7 +70,7 @@ export class AppComponent implements OnDestroy, OnInit{
           .subscribe({
               next: (msg: SubscriptionGrant | MqttMessage) => {
                   if (msg instanceof SubscriptionGrant) {
-                      this.status.push('Subscribed to : '+topic+' !');
+                      console.log("subscribed to : "+topic)
                   } else {
                       if (topic == "knx/state"){
                         switch (msg.action){ // {"action" : "l1", "value" : "0"}
@@ -108,7 +116,7 @@ export class AppComponent implements OnDestroy, OnInit{
                   }
               },
               error: (error: Error) => {
-                  this.status.push(`Something went wrong: ${error.message}`);
+                  console.log(`Something went wrong: ${error.message}`);
               }
           });
   }
@@ -120,10 +128,10 @@ export class AppComponent implements OnDestroy, OnInit{
   sendMsg(topic,action,extra, ip): void {
       this._mqttService.publishTo("" + topic+"/"+ip, {action : action, value: extra, }).subscribe({
           next: () => {
-              this.status.push('Message sent to : '+topic);
+              console.log('Message sent to : '+topic);
           },
           error: (error: Error) => {
-              this.status.push(`Something went wrong: ${error.message}`);
+              console.log(`Something went wrong: ${error.message}`);
           }
       });
   }

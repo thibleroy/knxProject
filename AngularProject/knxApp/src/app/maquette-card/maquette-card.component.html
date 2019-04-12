@@ -30,6 +30,7 @@
       </div>
       </ons-list-item>
     <ons-range modifier="material" [(value)]="value" (change)="sendMsg('knx/action','speed', (value))"></ons-range><br>{{value}}<br>
+    <ons-list-item><ons-button (click)="router.navigateByUrl('/main');">Page multicontroller</ons-button></ons-list-item>
     <ons-fab ripple position="bottom right">
         <ons-icon icon="md-plus" (click)="actionSheet.show()"></ons-icon>
       </ons-fab>

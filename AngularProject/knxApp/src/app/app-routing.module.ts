@@ -5,9 +5,13 @@ import { MainComponent } from './main/main.component';
 import { MaquetteCarouselComponent } from './maquette-carousel/maquette-carousel.component';
 
 const routes: Routes = [
+
   { path: '', component: LoginComponent },
   { path: 'main', component: MainComponent },
-  {path : 'maquette', component: MaquetteCarouselComponent}
+  {path : 'maquette', component: MaquetteCarouselComponent},
+  { path: '**',
+  redirectTo: '',
+  pathMatch: 'full'}
 ];
 
 @NgModule({

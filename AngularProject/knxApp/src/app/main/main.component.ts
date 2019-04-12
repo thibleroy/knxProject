@@ -3,6 +3,7 @@ import * as ons from 'onsenui';
 import { AppComponent } from "../app.component";
 import {MaquetteCardComponent} from "../maquette-card/maquette-card.component";
 import { Action } from 'rxjs/internal/scheduler/Action';
+import { Router } from '@angular/router';
 export interface Foo {
     bar: string;
 }
@@ -24,7 +25,7 @@ export class MainComponent implements OnInit,OnDestroy, OnChanges {
     ngOnDestroy(): void {
      
     }
-    constructor ( private App : AppComponent){}
+    constructor ( private App : AppComponent, private router : Router){}
   
     choseMaquette : boolean = true;
     maquettes = ["0.5","0.6"]
@@ -43,7 +44,9 @@ export class MainComponent implements OnInit,OnDestroy, OnChanges {
     this.lamps = data.currentValue;
   }
   ngOnInit() {
+    if (this.App.isLogged){
     this.chenillards.push({maquetteOrder : this.maquettes, chenillardOrder : [1,2,3,4]})
+    }else {this.router.navigateByUrl('/')}
   }
   sendMsg(topic,action,value){
     switch(action){

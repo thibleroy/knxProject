@@ -16,6 +16,7 @@
         <div class="expandable-content">
             <ons-list-item *ngFor="let c of chenillards" tappable (click)="sendMsg('knx/action','on', c)">{{c.maquetteOrder}} : {{c.chenillardOrder}}</ons-list-item>
    </div></ons-list-item>
+   <ons-list-item><ons-button (click)="router.navigateByUrl('/maquette');">Page unicontroller</ons-button></ons-list-item>
   </ons-list>
 </div>
     <ons-fab ripple position="bottom right">

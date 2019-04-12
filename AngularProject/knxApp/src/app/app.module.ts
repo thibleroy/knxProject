@@ -28,12 +28,9 @@ import { MaquetteCarouselComponent } from './maquette-carousel/maquette-carousel
     OnsenModule,
     AppRoutingModule,
     NgxMqttClientModule.withOptions({
+      rejectUnauthorized : true
       //broker aws : 3.83.149.37
       //broker local : 192.168.0.108
-      host: '3.83.149.37',
-      protocol: 'ws',
-      port: 9001,
-      clientId: 'Duncan'
     })
   ],
   providers: [MqttService],
