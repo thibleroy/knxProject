@@ -1,27 +1,46 @@
 <ons-page>
-  <ons-toolbar>
-    <div class="center">Ici on va controller la maquette en FAIT</div>
-  </ons-toolbar>
-  <div class="background"></div>
+  <ons-toolbar></ons-toolbar>
   <div class="content">
-    <div style="text-align: center; margin: 10px">
-<<<<<<< Updated upstream
-      <ons-button (click)="clickTurnOn()">Turn ON en FAIT</ons-button> <br>
-      <ons-range [(value)]="value"></ons-range><br>
-      <ons-range modifier="material" [(value)]="value" onchange="alert('pas si vite en fait')"></ons-range><br>
-      {{value}}
-=======
-       <br>
-       <ons-row>
-       <ons-input placeholder="1" [(value)]="lamp1"></ons-input>
-       <ons-input placeholder="2" [(value)]="lamp2"></ons-input>
-       <ons-input placeholder="3" [(value)]="lamp3"></ons-input>
-       <ons-input placeholder="4" [(value)]="lamp4"></ons-input>
-      </ons-row>
-      <ons-button (click)="sendMsg('knx/action','on', 'orderChenillard')" >Démarre le chenillard richard</ons-button> <br>
-      <ons-range modifier="material" [(value)]="value" (change)="sendMsg('knx/action',[(value)],null)"></ons-range><br>{{value}}<br>
-      <img src="assets/img/reverse.png" (click)="sendMsg('knx/action','reverse',null)">
->>>>>>> Stashed changes
+      <ons-list style="min-height : 100%">
+            <ons-row>
+    <div *ngFor="let maquette of maquettes; ">
+      <ons-card>
+      <div>
+        <app-maquette-card [data]="maquette"></app-maquette-card>
+      </div>
+    </ons-card>
+  </div>
+    </ons-row>
+    <ons-list-item expandable>
+        Changer de pattern global
+        <div class="expandable-content">
+            <ons-list-item *ngFor="let c of chenillards" tappable (click)="sendMsg('knx/action','on', c)">{{c.maquetteOrder}} : {{c.chenillardOrder}}</ons-list-item>
+   </div></ons-list-item>
+   <ons-list-item><ons-button (click)="router.navigateByUrl('/maquette');">Page unicontroller</ons-button></ons-list-item>
+  </ons-list>
+</div>
+    <ons-fab ripple position="bottom right">
+      <ons-icon icon="md-plus" (click)="actionSheet.show(); "></ons-icon>
+    </ons-fab>
+</ons-page>
+
+
+<ons-action-sheet #actionSheet cancelable [attr.animation]="animation">
+  <div class="action-sheet-mask"></div>
+  <div class="action-sheet">
+    <div *ngIf="choseMaquette">
+      <div class="action-sheet-title">Choisissez l'ordre des maquettes</div>
+      <div *ngFor="let item of makettes;">
+      <ons-action-sheet-button icon="md-square-o" (click)="choseChenillard(item)">Maquette {{item}}</ons-action-sheet-button>
+      </div>
+    </div>
+  <div *ngIf="!choseMaquette">
+    <div class="action-sheet-title">Choisissez l'ordre du chenillard à ajouter</div>
+    <div *ngFor="let item of order;">
+    <ons-action-sheet-button icon="md-square-o" (click)="choseChenillard(item)">Lampe {{item}}</ons-action-sheet-button>
     </div>
   </div>
-</ons-page>
+    <ons-action-sheet-button icon="md-close" (click)="actionSheet.hide()">Cancel</ons-action-sheet-button>
+    
+  </div>
+</ons-action-sheet>

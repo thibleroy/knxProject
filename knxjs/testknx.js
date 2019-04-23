@@ -14,7 +14,18 @@ client.on("connect", () => {
 client.on('message', (topic, message) => {
   let ip = topic.split('knx/action/')[0]
   let msg = JSON.parse(message)
-  console.log(msg)
+  console.log('topic : '+topic + ', message :' + JSON.stringify(msg))
+  if (ip==='allConnected'){
+    let maquetteOrder = msg.value.maquetteOrder
+    let chenillardOrder = msg.value.chenillardOrder
+    switch (msg.action){
+      case 'on' :
+      
+      break
+      default:break
+    }
+  }
+  else{
   switch (msg.action) {
     case 'discover':
     
@@ -63,11 +74,12 @@ client.on('message', (topic, message) => {
       break
     default: break
   }
+}
 })
 
 
 function letsConnectMan(ip) {
-  m = new Maquette(ip)
+  let m = new Maquette(ip)
   maquettes.push(m)
 }
 
