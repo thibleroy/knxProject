@@ -1,15 +1,14 @@
 import {Component, Output, EventEmitter, OnDestroy, OnInit} from '@angular/core';
 import { MqttService, ConnectionStatus, SubscriptionGrant } from 'ngx-mqtt-client';
-import { IClientOptions } from 'mqtt';
-import { stringify } from '@angular/compiler/src/util';
 import { Router } from '@angular/router';
+import { AuthService } from "./auth-service.service";
 
 export interface Foo {
     bar: string;
 }
 export interface MqttMessage {
     action:    string;
-    value:     string;
+    value:     any;
   }
 
 @Component({
@@ -19,45 +18,18 @@ export interface MqttMessage {
 })
 export class AppComponent implements OnDestroy, OnInit{
     ngOnInit(): void {
+        if(this.auth.isLogged()){
+        this.auth.reconnect();}
     this.subscribe('knx/action')
     this.subscribe('knx/state')
-    this.sendMsg('knx/action','discover',null,"")
     }
     messages: Array<Foo> = [];
     lampsCom : Array<number> = [0,0,0,0]
     lamps : Array<number> = [0,0,0,0];
     status = [];
-    switchChecked: boolean = false;
 
-  constructor(private _mqttService: MqttService, private router : Router) {
+  constructor(private _mqttService: MqttService, private router : Router, private auth : AuthService) {
 
-      /**
-       * Tracks connection status.
-       */
-      
-  }
-
-  isLogged():boolean{
-      let bool=false;
-    this._mqttService.status().subscribe((s: ConnectionStatus) => {
-        const status = s === ConnectionStatus.CONNECTED ? 'CONNECTED' : 'DISCONNECTED';
-        bool = (status=='CONNECTED')
-    });
-    return bool
-  }
-
-
-
-  isChecked (check){
-      this.switchChecked = check;
-  }
-  /**
-   * Manages connection manually.
-   * If there is an active connection this will forcefully disconnect that first.
-   * @param {IClientOptions} config
-   */
-  connect(config: IClientOptions): void {
-      this._mqttService.connect(config);
   }
 
   /**
@@ -128,7 +100,7 @@ export class AppComponent implements OnDestroy, OnInit{
   sendMsg(topic,action,extra, ip): void {
       this._mqttService.publishTo("" + topic+"/"+ip, {action : action, value: extra, }).subscribe({
           next: () => {
-              console.log('Message sent to : '+topic);
+              console.log('Message sent to : '+topic+"/"+ip);
           },
           error: (error: Error) => {
               console.log(`Something went wrong: ${error.message}`);

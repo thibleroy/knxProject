@@ -3,6 +3,7 @@ import ons from 'onsenui';
 import { Router } from '@angular/router';
 import { AppComponent } from "../app.component";
 import { IClientOptions } from 'mqtt';
+import { AuthService } from "../auth-service.service";
 
 @Component({
   selector: 'app-login',
@@ -13,26 +14,26 @@ export class LoginComponent implements OnInit {
 
   user : string =""
   pwd : string =""
-  constructor(private router : Router, private App : AppComponent) { }
+  constructor(private router : Router, private App : AppComponent, private auth : AuthService) { }
 
-  config : IClientOptions = {host : '192.168.43.68', protocol : 'ws', clientId : 'Duncan', port : 9001, reconnectPeriod : 10000}
-
+//3.83.149.37
   ngOnInit() {
-
+if (this.auth.isLogged()){
+  this.router.navigateByUrl('/main')
+}
   }
 
   login() {
-      this.config.username = this.user;
-      this.config.password = this.pwd;
-      this.App.connect(this.config)
+    console.log("login")
+      this.auth.connect(this.user, this.pwd)
       setTimeout(() => {
-        if (this.App.isLogged()) {
+        if (this.auth.isLogged()) {
           ons.notification.toast('Vous êtes connecté !', {timeout: 2000});
           this.router.navigateByUrl('/main');
         } else {
           ons.notification.toast('Identifiant ou mot de passe incorrect !', {timeout: 2000});
         }
-      }, 500);
+      }, 1000);
 
   };
 }

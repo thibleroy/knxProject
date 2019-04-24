@@ -14,9 +14,13 @@
     <ons-list-item expandable>
         Changer de pattern global
         <div class="expandable-content">
-            <ons-list-item *ngFor="let c of chenillards" tappable (click)="sendMsg('knx/action','on', c)">{{c.maquetteOrder}} : {{c.chenillardOrder}}</ons-list-item>
+            <ons-list-item *ngFor="let c of chenillards" tappable (click)="sendMsg('knx/action','on', c)">{{c.maquetteOrder}} : {{c.pattern}}</ons-list-item>
    </div></ons-list-item>
-   <ons-list-item><ons-button (click)="router.navigateByUrl('/maquette');">Page unicontroller</ons-button></ons-list-item>
+   <ons-list-item>
+      <ons-range modifier="material" [(value)]="value" (change)="sendMsg('knx/action','speed', (value))"></ons-range><br>{{value}}<br>
+      <ons-button (click)="sendMsg('knx/action','reverse', null)">Reverse</ons-button>
+      <ons-button (click)="sendMsg('knx/action','off', null)">OFF</ons-button>
+     <ons-button (click)="router.navigateByUrl('/maquette');">Page unicontroller</ons-button></ons-list-item>
   </ons-list>
 </div>
     <ons-fab ripple position="bottom right">

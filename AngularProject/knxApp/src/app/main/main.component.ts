@@ -1,9 +1,11 @@
 import { Component, OnInit, OnDestroy, Input, SimpleChanges, SimpleChange, OnChanges } from '@angular/core';
 import * as ons from 'onsenui';
-import { AppComponent } from "../app.component";
+import { AppComponent, MqttMessage } from "../app.component";
 import {MaquetteCardComponent} from "../maquette-card/maquette-card.component";
 import { Action } from 'rxjs/internal/scheduler/Action';
 import { Router } from '@angular/router';
+import { MqttService, SubscriptionGrant } from 'ngx-mqtt-client';
+import { AuthService } from "../auth-service.service";
 export interface Foo {
     bar: string;
 }
@@ -14,9 +16,9 @@ export interface Foo {
   styleUrls: ['./main.component.css']
 })
 
-export class MainComponent implements OnInit,OnDestroy, OnChanges {
+export class MainComponent implements OnInit,OnDestroy {
 
-  @Input() data;
+
   makettes: string[] = ['0.5','0.6']
   maketOrder: any[] = [];
 
@@ -25,27 +27,20 @@ export class MainComponent implements OnInit,OnDestroy, OnChanges {
     ngOnDestroy(): void {
      
     }
-    constructor ( private App : AppComponent, private router : Router){}
+    constructor ( private App : AppComponent, private router : Router,  private _mqttService: MqttService, private auth : AuthService){}
   
     choseMaquette : boolean = true;
     maquettes = ["0.5","0.6"]
     chenillards = [];
-    lamps : Array<number> = [0,0,0,0];
-    isChecked = false;
     value: string = '50';
     order = [1,2,3,4];
     newOrder = [];
-    main=false;
 
-  ngOnChanges(changes: SimpleChanges){
-    const data: SimpleChange = changes.data;
-    //console.log('prev value: ', data.previousValue);
-    //console.log('got data: ', data.currentValue);
-    this.lamps = data.currentValue;
-  }
   ngOnInit() {
-    if (this.App.isLogged){
-    this.chenillards.push({maquetteOrder : this.maquettes, chenillardOrder : [1,2,3,4]})
+    if (this.auth.isLogged()){
+    this.chenillards.push({maquetteOrder : this.maquettes, pattern : [1,2,3,4]})
+    this.subscribe('knx/state')
+    this.App.sendMsg('knx/action','discover',null,"")
     }else {this.router.navigateByUrl('/')}
   }
   sendMsg(topic,action,value){
@@ -75,7 +70,7 @@ export class MainComponent implements OnInit,OnDestroy, OnChanges {
     this.newOrder.push(value)
     this.order.splice(this.order.indexOf(value),1);
     if (this.order.length==0){
-      let enFAIT = {maquetteOrder : this.maketOrder, chenillardOrder : this.newOrder}
+      let enFAIT = {maquetteOrder : this.maketOrder, pattern : this.newOrder}
       this.chenillards.push(enFAIT);
       this.order = [1,2,3,4];
       this.newOrder =[];
@@ -84,5 +79,30 @@ export class MainComponent implements OnInit,OnDestroy, OnChanges {
       this.maketOrder=[]
     }
   }
+}
+
+subscribe(topic): void {
+  this._mqttService.subscribeTo(topic)
+      .subscribe({
+          next: (msg: SubscriptionGrant | MqttMessage) => {
+              if (msg instanceof SubscriptionGrant) {
+                 
+              } else {
+                  if (topic == "knx/state"){
+                    switch(msg.action){
+                    case "discover" :
+                        console.log("maquette co : " +msg.value)
+                        msg.value.forEach(element => {
+                          this.maquettes.push(element)
+                        });
+                        break
+                    }
+                  }
+              }
+          },
+          error: (error: Error) => {
+              
+          }
+      });
 }
 }
