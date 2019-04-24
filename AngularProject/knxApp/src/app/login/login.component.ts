@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import ons from 'onsenui';
 import { Router } from '@angular/router';
 import { AppComponent } from "../app.component";
-import { IClientOptions } from 'mqtt';
 import { AuthService } from "../auth-service.service";
 
 @Component({
@@ -26,7 +25,11 @@ if (this.auth.isLogged()){
   login() {
     console.log("login")
       this.auth.connect(this.user, this.pwd)
+    console.log("login2")
+
       setTimeout(() => {
+    console.log("login3")
+
         if (this.auth.isLogged()) {
           ons.notification.toast('Vous êtes connecté !', {timeout: 2000});
           this.router.navigateByUrl('/main');

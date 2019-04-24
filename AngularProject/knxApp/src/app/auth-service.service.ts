@@ -35,7 +35,8 @@ connect(user,pwd): void {
     this.statusLaunch()
     localStorage.setItem('usr',user)
     localStorage.setItem('pwd',pwd)
-    localStorage.setItem('isAuth',""+this.bool)
+    setTimeout(() => {
+    localStorage.setItem('isAuth',""+this.bool)},500)
 }
 
 statusLaunch(){
@@ -43,7 +44,11 @@ statusLaunch(){
     const status = s === ConnectionStatus.CONNECTED ? 'CONNECTED' : 'DISCONNECTED';
     console.log(status=='CONNECTED')
     this.bool = (status=='CONNECTED')
-
+   
 });
 }
+
+  disconnect() {
+    this._mqttService.end()
+  }
 }
