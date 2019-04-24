@@ -3,6 +3,7 @@ const mqtt = require('mqtt')
 let maquettes = []
 //définit l'ensemble des maquettes découvertes
 let knxs = []
+let isRunning = false
 Discover()
 const client = mqtt.connect('tcp://localhost:1883')
 //const client = mqtt.connect('tcp://3.83.149.37:1883')
@@ -27,39 +28,71 @@ client.on('message', (topic, message) => {
 
       break
     case 'disconnect':
+      let index = -1
       maquettes.forEach(m => {
         if (m.ip === ip) {
           m.disconnect()
+          index = maquettes.indexOf(m)
         }
       })
+
+      if (index > -1) maquettes.splice(index);
+
       break
     case 'on':
-      maquettes.forEach(m => {
-        if (m.ip === ip) {
-          m.runchenillard(msg.value)
-        }
-      })
+      if (ip === 'allConnected') {
+
+        let maquetteOrder = msg.value.maquetteOrder
+        console.log('order', maquetteOrder)
+        maquetteOrder.forEach(m => {
+          let temp = maquettes.find(el => el.ip === m)
+          console.log('temppattern', temp.chenillard.pattern)
+          temp.setPattern(msg.value.pattern)
+          temp.chenillard.running = true
+          temp.chenillardOnce().then(
+            temp.chenillard.running = false)
+        })
+
+      }
+      else {
+        maquettes.forEach(m => {
+          if (m.ip === ip) {
+            m.setPattern(msg.value.pattern)
+
+            m.runchenillard()
+          }
+        })
+      }
       break
     case 'off':
-      maquettes.forEach(m => {
-        if (m.ip === ip) {
+
+      if (ip === 'allConnected') {
+        this.isRunning = false
+        maquettes.forEach(m => {
           m.stopchenillard()
-        }
-      })
+        })
+      }
+      else {
+        maquettes.forEach(m => {
+          if (m.ip === ip) {
+            m.stopchenillard()
+          }
+        })
+      }
       break
     case 'speed':
       maquettes.forEach(m => {
         if (m.ip === ip) {
-          if (parseInt(msg.value) == 0) {
+          if (parseInt(msg.value.speed) == 0) {
             m.settimechenillard(5000)
           }
-          else m.settimechenillard(50000 / parseInt(msg.value))
+          else m.settimechenillard(50000 / parseInt(msg.value.speed))
         }
       })
       break
     case 'reverse':
       maquettes.forEach(m => {
-        if (m.getIp() === ip) {
+        if (m.ip === ip) {
           m.reversechenillard()
         }
       })

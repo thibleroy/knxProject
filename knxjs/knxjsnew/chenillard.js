@@ -4,4 +4,4 @@ const Chenillard={
    time:1000,
    running:false,
 }
-exports =Chenillard
+module.exports =Chenillard
