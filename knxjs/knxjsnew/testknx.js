@@ -1,5 +1,4 @@
 const mqtt = require('mqtt')
-const Maquette = require('./maquette')
 //définit les maquettes connectées
 let maquettes = []
 //définit l'ensemble des maquettes découvertes
@@ -12,65 +11,62 @@ client.on("connect", () => {
   client.subscribe('knx/action/#')
 })
 client.on('message', (topic, message) => {
-  let ip = topic.split('knx/action/')[0]
+  let ip = topic.split('knx/action/')[1]
   let msg = JSON.parse(message)
-  console.log(msg)
+  console.log('message : ' + JSON.stringify(msg) + ', topic : ' + topic)
   switch (msg.action) {
     case 'discover':
-    
+
       client.publish('knx/state', JSON.stringify({ action: 'discover', value: knxs }))
       break
     case 'connect':
-      letsConnectMan(ip)
+      const m = new require('./maquette.js')
+      m.ip = ip
+      m.connect()
+      maquettes.push(m)
+
       break
     case 'disconnect':
       maquettes.forEach(m => {
-        if (m.getIp() === ip) {
+        if (m.ip === ip) {
           m.disconnect()
         }
       })
       break
     case 'on':
       maquettes.forEach(m => {
-        if (m.getIp() === ip) {
-          m.chenillard(msg.value)
+        if (m.ip === ip) {
+          m.runchenillard(msg.value)
         }
       })
       break
     case 'off':
       maquettes.forEach(m => {
-        if (m.getIp() === ip) {
-          m.chenillard.stop()
+        if (m.ip === ip) {
+          m.stopchenillard()
         }
       })
       break
     case 'speed':
       maquettes.forEach(m => {
-        if (m.getIp() === ip) {
+        if (m.ip === ip) {
           if (parseInt(msg.value) == 0) {
-            m.chenillard.setTime(5000)
+            m.settimechenillard(5000)
           }
-          else m.chenillard.setTime(50000 / parseInt(msg.value))
+          else m.settimechenillard(50000 / parseInt(msg.value))
         }
       })
       break
     case 'reverse':
       maquettes.forEach(m => {
         if (m.getIp() === ip) {
-          m.chenillard.reverse()
+          m.reversechenillard()
         }
       })
       break
     default: break
   }
 })
-
-
-function letsConnectMan(ip) {
-  m = new Maquette(ip)
-  maquettes.push(m)
-}
-
 
 function Discover() {
   const { spawn } = require('child_process');
@@ -81,10 +77,10 @@ function Discover() {
   });
 
   knxdisc.on('close', () => {
-    let tab = str.split('192.168.0')
+    let tab = str.split('192.168.1')
     tab.forEach(el => {
       if (el.charAt(0) == '.') {
-        knxs.push('192.168.0' + el.split(':')[0])
+        knxs.push('192.168.1' + el.split(':')[0])
       }
     })
   });
