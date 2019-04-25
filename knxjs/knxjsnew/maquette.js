@@ -1,10 +1,10 @@
 const Connection = require('knx');
 const Chenillard = require('./chenillard')
 const Maquette = {
-  chenillard: { ...Chenillard },
+  chenillard: null,
   ip: '',
   connection: null,
-  isConnected: false,
+  isConnected: true,
   setPattern: function (patternTab) {
     this.chenillard.pattern = patternTab
   },
@@ -35,23 +35,23 @@ const Maquette = {
       },
 
     })
+    this.chenillard={...Chenillard}
   },
   disconnect: function () {
     this.connection.Disconnect()
   },
   chenillardOnce: async function () {
-    let l1 = this.chenillard.pattern[0]
-    let l2 = this.chenillard.pattern[1]
-    let l3 = this.chenillard.pattern[2]
-    let l4 = this.chenillard.pattern[3]
+    console.log(this.chenillard)
+    console.log(this.ip)
     if (this.chenillard.running) {
+      await this.sleep(this.chenillard.time)
       if (this.chenillard.reversed) {
-        this.down_light(l1);
-        this.start_light(l4);
+        this.down_light(this.chenillard.pattern[0]);
+        this.start_light(this.chenillard.pattern[3]);
       }
       else {
-        this.down_light(l4);
-        this.start_light(l1);
+        this.down_light(this.chenillard.pattern[3]);
+        this.start_light(this.chenillard.pattern[0]);
       }
       await this.sleep(this.chenillard.time);
     }
@@ -60,12 +60,12 @@ const Maquette = {
     if (this.chenillard.running) {
 
       if (this.chenillard.reversed) {
-        this.down_light(l4);
-        this.start_light(l3);
+        this.down_light(this.chenillard.pattern[3]);
+        this.start_light(this.chenillard.pattern[2]);
       }
       else {
-        this.down_light(l1);
-        this.start_light(l2);
+        this.down_light(this.chenillard.pattern[0]);
+        this.start_light(this.chenillard.pattern[1]);
       }
       await this.sleep(this.chenillard.time);
     }
@@ -73,12 +73,12 @@ const Maquette = {
 
     if (this.chenillard.running) {
       if (this.chenillard.reversed) {
-        this.down_light(l3);
-        this.start_light(l2);
+        this.down_light(this.chenillard.pattern[2]);
+        this.start_light(this.chenillard.pattern[1]);
       }
       else {
-        this.down_light(l2);
-        this.start_light(l3);
+        this.down_light(this.chenillard.pattern[1]);
+        this.start_light(this.chenillard.pattern[2]);
       }
       await this.sleep(this.chenillard.time);
     }
@@ -86,27 +86,30 @@ const Maquette = {
 
     if (this.chenillard.running) {
       if (this.chenillard.reversed) {
-        this.down_light(l2);
-        this.start_light(l1);
+        this.down_light(this.chenillard.pattern[1]);
+        this.start_light(this.chenillard.pattern[0]);
       }
       else {
-        this.down_light(l3);
-        this.start_light(l4);
+        this.down_light(this.chenillard.pattern[2]);
+        //this.start_light(this.chenillard.pattern[3]);
       }
-      await this.sleep(this.chenillard.time);
     }  
-    this.chenillard.running=false
+   else return
   },
   runchenillard: async function () {
     if (!this.chenillard.running) return
-    this.isConnected = true
-    this.chenillardOnce().then(() => {
-      this.runchenillard()
-    })
-
+    else this.chenillardOnce().then(() => this.runchenillard())
   },
-  stopchenillard: function () {
+  startchenillard:function(){
+this.chenillard.running=true
+  },
+  stopchenillard: async function () {
     this.chenillard.running = false
+    await this.sleep(500)
+    this.down_light(1)
+    this.down_light(2)
+    this.down_light(3)
+    this.down_light(4)
   },
   reversechenillard: function () {
     this.chenillard.reversed = !this.chenillard.reversed

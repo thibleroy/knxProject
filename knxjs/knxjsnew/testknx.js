@@ -4,9 +4,10 @@ const Maquette = require('./maquette')
 let maquettes = []
 //définit l'ensemble des maquettes découvertes
 let knxs = []
+let isRunning = false
 Discover()
-const client = mqtt.connect('tcp://localhost:1883')
-//const client = mqtt.connect('tcp://3.83.149.37:1883')
+//const client = mqtt.connect('tcp://localhost:1883')
+const client = mqtt.connect('tcp://3.83.149.37:1883')
 client.on("connect", () => {
   console.log('connected to broker')
   client.subscribe('knx/action/#')
@@ -21,16 +22,17 @@ client.on('message', (topic, message) => {
       client.publish('knx/state', JSON.stringify({ action: 'discover', value: knxs }))
       break
     case 'connect':
-      const m = { ...Maquette }
-      m.ip = ip
-      m.connect().then(() => {
-        m.down_light(1)
-        m.down_light(2)
-        m.down_light(3)
-        m.down_light(4)
-        m.start_light(1)
-      })
-      maquettes.push(m)
+      if (maquettes.find(el => el.ip === ip) === undefined) {
+        const m = { ...Maquette }
+        m.ip = ip
+        m.connect().then(() => {
+          m.down_light(1)
+          m.down_light(2)
+          m.down_light(3)
+          m.down_light(4)
+        })
+        maquettes.push(m)
+      }
       break
     case 'disconnect':
       let index = -1
@@ -46,23 +48,48 @@ client.on('message', (topic, message) => {
       break
     case 'on':
       if (ip === 'allConnected') {
-
-        let maquetteOrder = msg.value.maquetteOrder
-        maquetteOrder.forEach(m => {
-
-          let temp = maquettes.find(el => el.ip === m)
-          temp.setPattern(msg.value.pattern)
-          temp.chenillard.running = true
-          temp.chenillardOnce().then(()=>temp.chenillard.running=false)
+        if (isRunning){
+          isRunning=false
+          maquettes.forEach(m=>m.stopchenillard())
+        }
+        isRunning = true
+        maquettes.forEach(m => {
+          if (m.isConnected) {
+            m.stopchenillard()
+          }
         })
+        const fullChen = async () => {
+          let maquetteOrder = msg.value.maquetteOrder
+          for (const m of maquetteOrder) {
+            if (isRunning) {
+              let temp = maquettes.find(el => el.ip === m)
+              temp.setPattern(msg.value.pattern)
+              temp.chenillard.running = true
+              await temp.chenillardOnce()
+              await temp.sleep(temp.chenillard.temp)
+              temp.down_light(temp.chenillard.pattern[3])
+            }
+          }
+        }
+        async function loop() {
+          if (isRunning) {
+            fullChen().then(() => loop())
+          }
+        }
 
+        loop()
       }
       else {
         maquettes.forEach(m => {
+          console.log('ip '+ip+'m.ip'+m.ip)
           if (m.ip === ip) {
-            m.setPattern(msg.value.pattern)
+            m.stopchenillard().then(()=>{
+              m.setPattern(msg.value.pattern)
+              m.startchenillard()
+              m.runchenillard()
+            })
 
-            m.runchenillard()
+            
           }
         })
       }
@@ -70,7 +97,7 @@ client.on('message', (topic, message) => {
     case 'off':
 
       if (ip === 'allConnected') {
-        this.isRunning = false
+        isRunning = false
         maquettes.forEach(m => {
           m.stopchenillard()
         })
@@ -78,27 +105,46 @@ client.on('message', (topic, message) => {
       else {
         maquettes.forEach(m => {
           if (m.ip === ip) {
-            m.stopchenillard()
+            if (m.chenillard.running) m.stopchenillard()
+            
           }
         })
       }
       break
     case 'speed':
-      maquettes.forEach(m => {
-        if (m.ip === ip) {
+      if (ip === 'allConnected') {
+        maquettes.forEach(m => {
           if (parseInt(msg.value.speed) == 0) {
             m.settimechenillard(5000)
           }
           else m.settimechenillard(50000 / parseInt(msg.value.speed))
-        }
-      })
+
+        })
+      }
+      else {
+        maquettes.forEach(m => {
+          if (m.ip === ip) {
+            if (parseInt(msg.value.speed) == 0) {
+              m.settimechenillard(5000)
+            }
+            else m.settimechenillard(50000 / parseInt(msg.value.speed))
+          }
+        })
+      }
       break
     case 'reverse':
-      maquettes.forEach(m => {
-        if (m.ip === ip) {
+      if (ip === 'allConnected') {
+        maquettes.forEach(m => {
           m.reversechenillard()
-        }
-      })
+        })
+      }
+      else {
+        maquettes.forEach(m => {
+          if (m.ip === ip) {
+            m.reversechenillard()
+          }
+        })
+      }
       break
     default: break
   }
