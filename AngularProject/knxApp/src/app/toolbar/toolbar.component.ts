@@ -1,6 +1,8 @@
 import { Component, OnInit, EventEmitter, Output } from '@angular/core';
 import { AppComponent } from '../app.component';
-
+import { Router } from '@angular/router';
+import { AuthService } from "../auth-service.service";
+import ons from 'onsenui';
 @Component({
   selector: 'app-toolbar',
   templateUrl: './toolbar.component.html',
@@ -8,21 +10,29 @@ import { AppComponent } from '../app.component';
 })
 export class ToolbarComponent implements OnInit {
 
-  constructor ( private App : AppComponent){}
+  constructor ( private App : AppComponent, private router : Router, private auth : AuthService){}
+  
 
-  checked : boolean = false;
-
+  confirm() {
+    ons.notification.confirm({
+      message: 'Voulez-vous vraiment vous déconnecter ?',
+      cancelable: true,
+      callback: i => {
+        if (i == 1) {
+          this.disconnect();
+        }
+      }
+    });
+  }
   
   ngOnInit() {
   }
 
-  @Output() switchCheck = new EventEmitter();
-Checked = false;
+  disconnect(){
+    localStorage.setItem('isAuth','false');
+    this.auth.disconnect()
+    window.location.reload();
+  }
 
-  /*connectToDevice(){
-    this.checked = !this.checked
-    if(this.checked) this.App.sendMsg('knx/action', 'connect', null)
-    else {this.App.sendMsg('knx/action', 'disconnect',null)}
-    this.switchCheck.emit(this.checked)
-  }*/
+
 }

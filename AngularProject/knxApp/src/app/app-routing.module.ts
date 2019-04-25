@@ -6,11 +6,11 @@ import { MaquetteCarouselComponent } from './maquette-carousel/maquette-carousel
 
 const routes: Routes = [
 
-  { path: '', component: LoginComponent },
+  { path: 'login', component: LoginComponent },
   { path: 'main', component: MainComponent },
   {path : 'maquette', component: MaquetteCarouselComponent},
   { path: '**',
-  redirectTo: '',
+  redirectTo: 'login',
   pathMatch: 'full'}
 ];
 

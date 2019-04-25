@@ -1,9 +1,9 @@
 const mqtt = require('mqtt')
+const Maquette = require('./maquette')
 //définit les maquettes connectées
 let maquettes = []
 //définit l'ensemble des maquettes découvertes
 let knxs = []
-let isRunning = false
 Discover()
 const client = mqtt.connect('tcp://localhost:1883')
 //const client = mqtt.connect('tcp://3.83.149.37:1883')
@@ -21,11 +21,16 @@ client.on('message', (topic, message) => {
       client.publish('knx/state', JSON.stringify({ action: 'discover', value: knxs }))
       break
     case 'connect':
-      const m = new require('./maquette.js')
+      const m = { ...Maquette }
       m.ip = ip
-      m.connect()
+      m.connect().then(() => {
+        m.down_light(1)
+        m.down_light(2)
+        m.down_light(3)
+        m.down_light(4)
+        m.start_light(1)
+      })
       maquettes.push(m)
-
       break
     case 'disconnect':
       let index = -1
@@ -43,14 +48,12 @@ client.on('message', (topic, message) => {
       if (ip === 'allConnected') {
 
         let maquetteOrder = msg.value.maquetteOrder
-        console.log('order', maquetteOrder)
         maquetteOrder.forEach(m => {
+
           let temp = maquettes.find(el => el.ip === m)
-          console.log('temppattern', temp.chenillard.pattern)
           temp.setPattern(msg.value.pattern)
           temp.chenillard.running = true
-          temp.chenillardOnce().then(
-            temp.chenillard.running = false)
+          temp.chenillardOnce().then(()=>temp.chenillard.running=false)
         })
 
       }
