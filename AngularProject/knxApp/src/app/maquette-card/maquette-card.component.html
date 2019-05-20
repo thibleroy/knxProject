@@ -1,6 +1,5 @@
 <div class="content">
-  <div class="container">
-    <ons-list style="padding:10px 10px 5px; min-height: 100%">
+    <ons-list style="padding:10px 10px 5px; height: 100%; width: 100%;">
       <br>
       <ons-list-header style="font-size : 2em">{{data}}</ons-list-header>
       <p *ngIf="!connected">Veuillez vous connecter a la maquette</p>
@@ -41,21 +40,16 @@
               {{c.value}}</ons-list-item>
           </div>
         </ons-list-item>
-        <div class="center">
+        <div style="text-align: center">
           <ons-range modifier="material" [(value)]="value" (change)="sendMsg('knx/action','speed', (value))">
           </ons-range>
-        </div><br>{{value}}<br>
-        <ons-list-item>
-          <ons-button (click)="router.navigateByUrl('/main');">Page multicontroller</ons-button>
-        </ons-list-item>
+        <br>Vitesse : {{value}}<br>
+      </div>
         <ons-fab ripple position="bottom right">
           <ons-icon icon="md-plus" (click)="actionSheet.show()"></ons-icon>
         </ons-fab>
       </div>
     </ons-list>
-
-
-  </div>
 </div>
 
 

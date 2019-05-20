@@ -18,11 +18,18 @@
         </div>
       </ons-list-item>
       <ons-list-item>
+        <div class="row">
+        <div class="col" style="text-align: center">
         <ons-range modifier="material" [(value)]="value" (change)="sendMsg('knx/action','speed', {speed : (value)})">
-        </ons-range><br>{{value}}<br>
-        <ons-button (click)="sendMsg('knx/action','reverse', null)">Reverse</ons-button>
-        <ons-button (click)="sendMsg('knx/action','off', null)">OFF</ons-button>
-        <ons-button (click)="router.navigateByUrl('/maquette');">Page unicontroller</ons-button>
+        </ons-range><br> Speed : {{value}}<br>
+      </div>
+      <div class="col" style="text-align:center">
+        <ons-button modifier="outline" (click)="sendMsg('knx/action','reverse', null)">Reverse</ons-button>
+        <ons-button modifier="outline" (click)="sendMsg('knx/action','off', null)">Stop</ons-button>
+        </div>
+        <div class="col">
+        </div>
+      </div>
       </ons-list-item>
     </ons-list>
   </div>
