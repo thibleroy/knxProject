@@ -1,54 +1,72 @@
 <div class="content">
-  <ons-list>
-    <br>
-<ons-list-header style="font-size : 2em">{{data}}</ons-list-header>
-  <ons-row style="justify-content : center">
-    <img src="assets/img/light-off.png" *ngIf="lamps[0]==0">
-    <img src="assets/img/light-on.png" *ngIf="lamps[0]==1">
-    <img src="assets/img/light-off.png" *ngIf="lamps[1]==0">
-    <img src="assets/img/light-on.png" *ngIf="lamps[1]==1">
-    <img src="assets/img/light-off.png" *ngIf="lamps[2]==0">
-    <img src="assets/img/light-on.png" *ngIf="lamps[2]==1">
-    <img src="assets/img/light-off.png" *ngIf="lamps[3]==0">
-    <img src="assets/img/light-on.png" *ngIf="lamps[3]==1">
-  </ons-row>
-  <ons-list-item>
-    <ons-button (click)= "sendMsg('knx/action', 'connect', null); main=!main">Connect</ons-button>
-    <ons-button (click)= "sendMsg('knx/action', 'disconnect', null)">Disconnect</ons-button>
-  </ons-list-item>
-  <div *ngIf="router.url=='/maquette'">
-    <ons-list-item>
-      <ons-button (click)="sendMsg('knx/action','on', '1, 2, 3, 4')">ON</ons-button>
-      <ons-button (click)="sendMsg('knx/action','off', null)">OFF</ons-button>
-    </ons-list-item>
-  <ons-list-item>
-  <ons-button (click)="sendMsg('knx/action','reverse', null)">Reverse</ons-button></ons-list-item>
-  <ons-list-item expandable>
-      Changer de pattern
-      <div class="expandable-content">
-          <ons-list-item *ngFor="let c of chenillards" tappable (click)="sendMsg('knx/action','on', c.value)">{{c.value}}</ons-list-item>
-      </div>
+  <div class="container">
+    <ons-list style="padding:10px 10px 5px; min-height: 100%">
+      <br>
+      <ons-list-header style="font-size : 2em">{{data}}</ons-list-header>
+      <p *ngIf="!connected">Veuillez vous connecter a la maquette</p>
+      <ons-row style="justify-content : center" *ngIf="connected">
+        <img src="assets/img/light-off.png" *ngIf="lamps[0]==0">
+        <img src="assets/img/light-on.png" *ngIf="lamps[0]==1">
+        <img src="assets/img/light-off.png" *ngIf="lamps[1]==0">
+        <img src="assets/img/light-on.png" *ngIf="lamps[1]==1">
+        <img src="assets/img/light-off.png" *ngIf="lamps[2]==0">
+        <img src="assets/img/light-on.png" *ngIf="lamps[2]==1">
+        <img src="assets/img/light-off.png" *ngIf="lamps[3]==0">
+        <img src="assets/img/light-on.png" *ngIf="lamps[3]==1">
+      </ons-row>
+      <ons-list-item>
+        <ons-row>
+          <ons-col width="50%">
+            <ons-button modifier="outline" style="min-width:100%" (click)="sendMsg('knx/action', 'connect', null); main=!main">Connect
+            </ons-button>
+          </ons-col>
+          <ons-col width="50%">
+            <ons-button modifier="outline" style="min-width:100%" (click)="sendMsg('knx/action', 'disconnect', null)">Disconnect
+            </ons-button>
+          </ons-col>
+        </ons-row>
       </ons-list-item>
-    <ons-range modifier="material" [(value)]="value" (change)="sendMsg('knx/action','speed', (value))"></ons-range><br>{{value}}<br>
-    <ons-list-item><ons-button (click)="router.navigateByUrl('/main');">Page multicontroller</ons-button></ons-list-item>
-    <ons-fab ripple position="bottom right">
-        <ons-icon icon="md-plus" (click)="actionSheet.show()"></ons-icon>
-      </ons-fab>
-  </div>
-  </ons-list>
-  
+      <div *ngIf="router.url=='/maquette'">
+        <ons-list-item>
+          <ons-button (click)="sendMsg('knx/action','on', '1, 2, 3, 4')">ON</ons-button>
+          <ons-button (click)="sendMsg('knx/action','off', null)">OFF</ons-button>
+        </ons-list-item>
+        <ons-list-item>
+          <ons-button (click)="sendMsg('knx/action','reverse', null)">Reverse</ons-button>
+        </ons-list-item>
+        <ons-list-item expandable>
+          Changer de pattern
+          <div class="expandable-content">
+            <ons-list-item *ngFor="let c of chenillards" tappable (click)="sendMsg('knx/action','on', c.value)">
+              {{c.value}}</ons-list-item>
+          </div>
+        </ons-list-item>
+        <div class="center">
+          <ons-range modifier="material" [(value)]="value" (change)="sendMsg('knx/action','speed', (value))">
+          </ons-range>
+        </div><br>{{value}}<br>
+        <ons-list-item>
+          <ons-button (click)="router.navigateByUrl('/main');">Page multicontroller</ons-button>
+        </ons-list-item>
+        <ons-fab ripple position="bottom right">
+          <ons-icon icon="md-plus" (click)="actionSheet.show()"></ons-icon>
+        </ons-fab>
+      </div>
+    </ons-list>
 
-    
+
+  </div>
 </div>
 
 
 <ons-action-sheet #actionSheet cancelable [attr.animation]="animation">
-    <div class="action-sheet-mask"></div>
-    <div class="action-sheet">
-      <div class="action-sheet-title">Choisissez l'ordre du chenillard à ajouter</div>
-      <div *ngFor="let item of order;">
-      <ons-action-sheet-button icon="md-square-o" (click)="choseChenillard(item)">Lampe {{item}}</ons-action-sheet-button>
-      </div>
-      <ons-action-sheet-button icon="md-close" (click)="actionSheet.hide()">Cancel</ons-action-sheet-button>
+  <div class="action-sheet-mask"></div>
+  <div class="action-sheet">
+    <div class="action-sheet-title">Choisissez l'ordre du chenillard à ajouter</div>
+    <div *ngFor="let item of order;">
+      <ons-action-sheet-button icon="md-square-o" (click)="choseChenillard(item)">Lampe {{item}}
+      </ons-action-sheet-button>
     </div>
-  </ons-action-sheet>
+    <ons-action-sheet-button icon="md-close" (click)="actionSheet.hide()">Cancel</ons-action-sheet-button>
+  </div>
+</ons-action-sheet>

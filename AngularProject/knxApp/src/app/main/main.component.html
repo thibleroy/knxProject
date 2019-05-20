@@ -1,31 +1,34 @@
 <ons-page>
   <ons-toolbar></ons-toolbar>
   <div class="content">
-      <ons-list style="min-height : 100%">
-            <ons-row>
-    <div *ngFor="let maquette of maquettes; ">
-      <ons-card>
-      <div>
-        <app-maquette-card [data]="maquette"></app-maquette-card>
-      </div>
-    </ons-card>
-  </div>
-    </ons-row>
-    <ons-list-item expandable>
+    <ons-button *ngIf="!atLeastOne()" (click)="sendDiscover()">Réessayer</ons-button>
+    <ons-list style="min-height : 100%" *ngIf="atLeastOne()">
+        <div *ngFor="let maquette of maquettes; ">
+          <ons-card >
+            <div>
+              <app-maquette-card [data]="maquette"></app-maquette-card>
+            </div>
+          </ons-card>
+        </div>
+      <ons-list-item expandable>
         Changer de pattern global
         <div class="expandable-content">
-            <ons-list-item *ngFor="let c of chenillards" tappable (click)="sendMsg('knx/action','on', c)">{{c.maquetteOrder}} : {{c.pattern}}</ons-list-item>
-   </div></ons-list-item>
-   <ons-list-item>
-      <ons-range modifier="material" [(value)]="value" (change)="sendMsg('knx/action','speed', (value))"></ons-range><br>{{value}}<br>
-      <ons-button (click)="sendMsg('knx/action','reverse', null)">Reverse</ons-button>
-      <ons-button (click)="sendMsg('knx/action','off', null)">OFF</ons-button>
-     <ons-button (click)="router.navigateByUrl('/maquette');">Page unicontroller</ons-button></ons-list-item>
-  </ons-list>
-</div>
-    <ons-fab ripple position="bottom right">
-      <ons-icon icon="md-plus" (click)="actionSheet.show(); "></ons-icon>
-    </ons-fab>
+          <ons-list-item *ngFor="let c of chenillards" tappable (click)="sendMsg('knx/action','on', c)">
+            {{c.maquetteOrder}} : {{c.pattern}}</ons-list-item>
+        </div>
+      </ons-list-item>
+      <ons-list-item>
+        <ons-range modifier="material" [(value)]="value" (change)="sendMsg('knx/action','speed', {speed : (value)})">
+        </ons-range><br>{{value}}<br>
+        <ons-button (click)="sendMsg('knx/action','reverse', null)">Reverse</ons-button>
+        <ons-button (click)="sendMsg('knx/action','off', null)">OFF</ons-button>
+        <ons-button (click)="router.navigateByUrl('/maquette');">Page unicontroller</ons-button>
+      </ons-list-item>
+    </ons-list>
+  </div>
+  <ons-fab ripple position="bottom right">
+    <ons-icon icon="md-plus" (click)="actionSheet.show(); "></ons-icon>
+  </ons-fab>
 </ons-page>
 
 
@@ -34,18 +37,19 @@
   <div class="action-sheet">
     <div *ngIf="choseMaquette">
       <div class="action-sheet-title">Choisissez l'ordre des maquettes</div>
-      <div *ngFor="let item of makettes;">
-      <ons-action-sheet-button icon="md-square-o" (click)="choseChenillard(item)">Maquette {{item}}</ons-action-sheet-button>
+      <div *ngFor="let item of ipConnected;">
+        <ons-action-sheet-button icon="md-square-o" (click)="choseChenillard(item)">Maquette {{item}}
+        </ons-action-sheet-button>
       </div>
     </div>
-  <div *ngIf="!choseMaquette">
-    <div class="action-sheet-title">Choisissez l'ordre du chenillard à ajouter</div>
-    <div *ngFor="let item of order;">
-    <ons-action-sheet-button icon="md-square-o" (click)="choseChenillard(item)">Lampe {{item}}</ons-action-sheet-button>
+    <div *ngIf="!choseMaquette">
+      <div class="action-sheet-title">Choisissez l'ordre du chenillard à ajouter</div>
+      <div *ngFor="let item of order;">
+        <ons-action-sheet-button icon="md-square-o" (click)="choseChenillard(item)">Lampe {{item}}
+        </ons-action-sheet-button>
+      </div>
     </div>
-  </div>
     <ons-action-sheet-button icon="md-close" (click)="actionSheet.hide()">Cancel</ons-action-sheet-button>
-    
+
   </div>
 </ons-action-sheet>
-              
