@@ -5,10 +5,12 @@ let inverse
 let time
 let connection
 let isConnected = false
-const client = mqtt.connect('tcp://localhost:1883')
+
+const opt={username:'admin',password:'admin'}
+const client = mqtt.connect('tcp://localhost:1883',opt)
 client.on("connect", () => {
   console.log('connected to broker')
-  client.subscribe('knx/action')
+  client.subscribe('knx/action/#')
 })
 client.on('message', (topic, message) => {
   //"{"action":"connect"}"
@@ -64,7 +66,7 @@ function letsConnectMan() {
   connection = new knx.Connection({
 
     // ip address and port of the KNX router or interface
-    ipAddr: '192.168.0.5',
+    ipAddr: '192.168.1.10',
     ipPort: 3671,
     // define your event handlers here:
     handlers: {

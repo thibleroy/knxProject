@@ -11,7 +11,7 @@ export class AuthService {
 
   private bool : boolean
 
-  config : IClientOptions = {host : '192.168.43.68', protocol : 'ws', port : 9001, connectTimeout:1000, rejectUnauthorized : false, 
+  config : IClientOptions = {host : '3.83.149.37', protocol : 'ws', port : 9001, connectTimeout:1000, rejectUnauthorized : false, 
   keepalive : 0, reconnectPeriod : 100000}
 
   isLogged():boolean{
