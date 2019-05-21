@@ -3,11 +3,11 @@ const Maquette = require('./maquette')
 //définit les maquettes connectées
 let maquettes = []
 //définit l'ensemble des maquettes découvertes
-let knxs = []
+
 let isRunning = false
-Discover()
-//const client = mqtt.connect('tcp://localhost:1883')
-const client = mqtt.connect('tcp://3.83.149.37:1883')
+
+const opt = { username: 'admin', password: 'admin' }
+const client = mqtt.connect('tcp://localhost:1883', opt)
 client.on("connect", () => {
   console.log('connected to broker')
   client.subscribe('knx/action/#')
@@ -18,19 +18,14 @@ client.on('message', (topic, message) => {
   console.log('message : ' + JSON.stringify(msg) + ', topic : ' + topic)
   switch (msg.action) {
     case 'discover':
+      Discover()
 
-      client.publish('knx/state', JSON.stringify({ action: 'discover', value: knxs }))
       break
     case 'connect':
       if (maquettes.find(el => el.ip === ip) === undefined) {
         const m = { ...Maquette }
         m.ip = ip
-        m.connect().then(() => {
-          m.down_light(1)
-          m.down_light(2)
-          m.down_light(3)
-          m.down_light(4)
-        })
+        m.connect()
         maquettes.push(m)
       }
       break
@@ -38,6 +33,8 @@ client.on('message', (topic, message) => {
       let index = -1
       maquettes.forEach(m => {
         if (m.ip === ip) {
+          if (m.chenillard.running) m.chenillard.running = false
+          
           m.disconnect()
           index = maquettes.indexOf(m)
         }
@@ -48,9 +45,9 @@ client.on('message', (topic, message) => {
       break
     case 'on':
       if (ip === 'allConnected') {
-        if (isRunning){
-          isRunning=false
-          maquettes.forEach(m=>m.stopchenillard())
+        if (isRunning) {
+          isRunning = false
+          maquettes.forEach(m => m.stopchenillard())
         }
         isRunning = true
         maquettes.forEach(m => {
@@ -80,16 +77,20 @@ client.on('message', (topic, message) => {
         loop()
       }
       else {
+        if (isRunning) {
+          isRunning = false
+          maquettes.forEach(m => m.stopchenillard())
+        }
         maquettes.forEach(m => {
-          console.log('ip '+ip+'m.ip'+m.ip)
+          console.log('ip ' + ip + 'm.ip' + m.ip)
           if (m.ip === ip) {
-            m.stopchenillard().then(()=>{
-              m.setPattern(msg.value.pattern)
+            m.stopchenillard().then(() => {
+              m.setPattern(msg.value)
               m.startchenillard()
               m.runchenillard()
             })
 
-            
+
           }
         })
       }
@@ -106,7 +107,7 @@ client.on('message', (topic, message) => {
         maquettes.forEach(m => {
           if (m.ip === ip) {
             if (m.chenillard.running) m.stopchenillard()
-            
+
           }
         })
       }
@@ -114,21 +115,21 @@ client.on('message', (topic, message) => {
     case 'speed':
       if (ip === 'allConnected') {
         maquettes.forEach(m => {
-          if (parseInt(msg.value.speed) == 0) {
+          if (parseInt(msg.value) <= 20) {
             m.settimechenillard(5000)
           }
-          else m.settimechenillard(50000 / parseInt(msg.value.speed))
+          else m.settimechenillard(50000 / parseInt(msg.value))
 
         })
       }
       else {
         maquettes.forEach(m => {
           if (m.ip === ip) {
-            if (parseInt(msg.value.speed) == 0) {
+            if (parseInt(msg.value) <= 20) {
               m.settimechenillard(5000)
             }
-            else m.settimechenillard(50000 / parseInt(msg.value.speed))
-          }
+            else m.settimechenillard(50000 / parseInt(msg.value))
+   }
         })
       }
       break
@@ -151,6 +152,7 @@ client.on('message', (topic, message) => {
 })
 
 function Discover() {
+  knxs = []
   const { spawn } = require('child_process');
   const knxdisc = spawn('sudo', ['nmap', '--script', 'knx-gateway-discover', '-e', 'wlp3s0']);
   let str = ''
@@ -165,5 +167,8 @@ function Discover() {
         knxs.push('192.168.1' + el.split(':')[0])
       }
     })
-  });
+    client.publish('knx/state', JSON.stringify({ action: 'discover', value: knxs }))
+  })
+
 }
+module.exports = client
