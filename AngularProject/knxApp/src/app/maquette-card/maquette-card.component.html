@@ -1,9 +1,14 @@
 <div class="content">
     <ons-list style="padding:10px 10px 5px; height: 100%; width: 100%;">
       <br>
-      <ons-list-header style="font-size : 2em">{{data}}</ons-list-header>
-      <p *ngIf="!connected">Veuillez vous connecter a la maquette</p>
-      <ons-row style="justify-content : center" *ngIf="connected">
+      <div class="row">
+      <ons-list-header style="font-size : 2em">{{data}}
+          <img *ngIf="!connectedService.connectedIp(data)" style="text-align: right" src="https://img.icons8.com/windows/32/000000/ok.png">
+          <img *ngIf="connectedService.connectedIp(data)" style="text-align: right" src="https://img.icons8.com/color/32/000000/ok.png">
+      </ons-list-header>
+    </div>
+      <p *ngIf="!connectedService.connectedIp(data)">Veuillez vous connecter a la maquette</p>
+      <ons-row style="justify-content : center" *ngIf="connectedService.connectedIp(data)">
         <img src="assets/img/light-off.png" *ngIf="lamps[0]==0">
         <img src="assets/img/light-on.png" *ngIf="lamps[0]==1">
         <img src="assets/img/light-off.png" *ngIf="lamps[1]==0">

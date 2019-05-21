@@ -48,7 +48,7 @@ export class MainComponent implements OnInit, OnDestroy {
 
 
   sendDiscover(){
-    this.sendMsg("knx/action","discover",null)
+    this.App.sendMsg("knx/action","discover",null, "")
   }
 
   atLeastOne(){
@@ -98,9 +98,12 @@ export class MainComponent implements OnInit, OnDestroy {
                 case "discover":
                   console.log("maquette la : " + msg.value)
                   msg.value.forEach(element => {
-                    this.maquettes.push(element)
-                    this.makettes.push(element)
-                    this.chenillards.push({ maquetteOrder: this.ipConnected, pattern: [1, 2, 3, 4] })
+                    if (this.maquettes.indexOf(element)!= -1){
+
+                    }else{
+                      this.maquettes.push(element)
+                      this.makettes.push(element)
+                    }
                   });
                   this.connectedService.maquetteAvailable = this.maquettes
                   break

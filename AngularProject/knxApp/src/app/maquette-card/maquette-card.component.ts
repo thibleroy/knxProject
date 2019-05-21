@@ -26,7 +26,7 @@ export class MaquetteCardComponent implements OnInit {
   }
   connected : boolean = false;
   lampsCom: Array<number> = [0, 0, 0, 0]
-  chenillards = [{ value: "1, 2, 3, 4" }];
+  chenillards = [];
   lamps: Array<number> = [0, 0, 0, 0];
   value: string = '50';
   order = [1, 2, 3, 4];
@@ -67,6 +67,7 @@ this.connected= (this.connectedService.connectedIp(this.data))
 
           } else {
             if (topic == "knx/state/" + this.data) {
+              console.log(msg + "componentmaquette")
               switch (msg.action) { // {"action" : "l1", "value" : "0"}
                 case "l1":
                   if (msg.value == "1") {

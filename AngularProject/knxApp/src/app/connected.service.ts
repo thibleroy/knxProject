@@ -4,8 +4,8 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class ConnectedService {
-  maquetteAvailable = ["test1","test2"]
-  ipConnected = ["test2"];
+  maquetteAvailable = []
+  ipConnected = [];
 
   constructor() { }
 

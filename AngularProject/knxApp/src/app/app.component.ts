@@ -45,6 +45,7 @@ export class AppComponent implements OnDestroy, OnInit{
                       console.log("subscribed to : "+topic)
                   } else {
                       if (topic == "knx/state"){
+                        console.log(msg + "appcomonent")
                         switch (msg.action){ // {"action" : "l1", "value" : "0"}
                             case "l1" : 
                             if (msg.value=="1"){

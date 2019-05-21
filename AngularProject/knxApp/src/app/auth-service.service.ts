@@ -12,8 +12,7 @@ export class AuthService {
   private bool: boolean
 
   config: IClientOptions = {
-    host: '192.168.1.105', protocol: 'ws', port: 9001, connectTimeout: 1000, rejectUnauthorized: false,
-    keepalive: 0, reconnectPeriod: 100000
+    host: '192.168.1.107', protocol: 'ws', port: 9001
   }
 
   isLogged(): boolean {
@@ -47,6 +46,9 @@ export class AuthService {
       const status = s === ConnectionStatus.CONNECTED ? 'CONNECTED' : 'DISCONNECTED';
       console.log(status == 'CONNECTED')
       this.bool = (status == 'CONNECTED')
+      if (this.bool==false){
+ 
+      }
 
     });
   }

@@ -1,7 +1,9 @@
 <ons-page>
   <ons-toolbar></ons-toolbar>
   <div class="content">
-    <ons-button *ngIf="!atLeastOne()" (click)="sendDiscover()">Réessayer</ons-button>
+    <div style="text-align: center; vertical-align:center; height: 100%; margin-top: 40vh;" *ngIf="!atLeastOne()">
+    <ons-button (click)="sendDiscover()">Réessayer</ons-button>
+  </div>
     <ons-list style="min-height : 100%" *ngIf="atLeastOne()">
         <div *ngFor="let maquette of maquettes; ">
           <ons-card >
@@ -20,7 +22,7 @@
       <ons-list-item>
         <div class="row">
         <div class="col" style="text-align: center">
-        <ons-range modifier="material" [(value)]="value" (change)="sendMsg('knx/action','speed', {speed : (value)})">
+        <ons-range modifier="material" [(value)]="value" (change)="sendMsg('knx/action','speed', (value))">
         </ons-range><br> Speed : {{value}}<br>
       </div>
       <div class="col" style="text-align:center">
