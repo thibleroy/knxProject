@@ -86,7 +86,7 @@ export class MainComponent implements OnInit, OnDestroy {
   }
 
   subscribe(topic): void {
-    this._mqttService.subscribeTo(topic)
+    this._mqttService .subscribeTo(topic)
       .subscribe({
         next: (msg: SubscriptionGrant | MqttMessage) => {
           if (msg instanceof SubscriptionGrant) {
